@@ -1,5 +1,5 @@
-name: {{PROJECT_NAME}}
+name: C12QEsimulator
 channels:
   - defaults
 dependencies:
-  - python={{PYTHON_VERSION}}
+  - python=3.10
