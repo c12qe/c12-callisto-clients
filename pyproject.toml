@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "{{PROJECT_NAME}}"
+version = "0.1.0"
+description = ""
+authors = ["{{AUTHOR_NAME}}"]
+
+[tool.poetry.dependencies]
+python = "~{{PYTHON_VERSION}}"
+
+[tool.poetry.dev-dependencies]
+black = "^22.3.0"
+pytest = "^7.1.1"
+pre-commit = "^2.18.1"
+coverage = "^6.3.2"
+pylint = "^2.13.5"
+jupyterlab = "^3.3.3"
+
+[tool.black]
+line-length = 100
+target-version = ['{{BLACK_PYTHON_VERSION}}']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
+python_files = "*_test.py"
+pythonpath = "src"
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
