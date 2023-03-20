@@ -3,10 +3,9 @@
 """
 
 HOST_URL = "dev-simulator.c12qe.net"
-PORT = 8080
+PORT = None  # Used for testing purposes
 
-
-API_BASE_URL = f"https://{HOST_URL}/api"
+API_BASE_URL = f"https://{HOST_URL}{'' if PORT is None else ':'+str(PORT)}/api"
 
 API_SIMULATOR_URL = API_BASE_URL + "/c12sim"
 API_HEALTH_URL = API_BASE_URL + "/health"

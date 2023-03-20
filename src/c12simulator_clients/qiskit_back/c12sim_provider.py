@@ -1,10 +1,11 @@
-from typing import Union
+from typing import Union, List
 from qiskit.providers.provider import ProviderV1
 from qiskit.providers.exceptions import QiskitBackendNotFoundError
-from c12simulator.api.client import Request
-from c12simulator.qiskit_back.c12sim_backend import C12SimBackend
-from c12simulator.qiskit_back.exceptions import C12SimApiError
-from c12simulator.api.exceptions import ApiError
+from c12simulator_clients.api.client import Request
+from c12simulator_clients.qiskit_back.c12sim_backend import C12SimBackend
+from c12simulator_clients.qiskit_back.exceptions import C12SimApiError
+from c12simulator_clients.api.exceptions import ApiError
+from c12simulator_clients.user_configs import UserConfigs
 
 
 class C12SimProvider(ProviderV1):
@@ -15,11 +16,17 @@ class C12SimProvider(ProviderV1):
     """
 
     _request: Request = None
+    _user_configs: UserConfigs = None
 
-    def __init__(self, auth_token: str):
-        self._request = Request(auth_token)
+    def __init__(self, user_config: UserConfigs):
+        self._user_configs = user_config
+        self._request = Request(self._user_configs.token, self._user_configs.verbose)
 
-    def backends(self, name=None, **kwargs) -> list[str]:
+    @property
+    def user_configs(self):
+        return self._user_configs
+
+    def backends(self, name=None, **kwargs) -> List[str]:
         """
         Return all available backends for the current user.
 
@@ -38,10 +45,8 @@ class C12SimProvider(ProviderV1):
             return backends
         except PermissionError:
             return []
-        except ApiError as apierr:
-            raise C12SimApiError(
-                "Unexpected error happened during the accessing the remote server"
-            ) from apierr
+        except ApiError as api_err:
+            raise C12SimApiError("Unexpected error happened during the accessing the remote server") from api_err
 
     def get_backend(self, name=None, **kwargs) -> Union[C12SimBackend, None]:
         """
@@ -71,8 +76,9 @@ class C12SimProvider(ProviderV1):
         if len(properties) == 0:
             raise QiskitBackendNotFoundError(f"There is no backend with a name {name}")
 
-        backend = C12SimBackend(
-            provider=self, name=name, request=self._request, properties=properties[0]
-        )
+        if self._user_configs.verbose:
+            print(f"Backend properties {properties}")
+
+        backend = C12SimBackend(provider=self, name=name, request=self._request, properties=properties[0])
 
         return backend

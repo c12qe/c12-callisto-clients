@@ -4,10 +4,9 @@ import numpy as np
 from qiskit.result import Result
 from qiskit.providers import JobStatus, JobV1, BackendV2
 from qiskit.result.models import ExperimentResult, ExperimentResultData
-from c12simulator.qiskit_back.exceptions import C12SimApiError, C12SimJobError
+from c12simulator_clients.qiskit_back.exceptions import C12SimApiError, C12SimJobError
 
-
-from c12simulator.api.exceptions import ApiError
+from c12simulator_clients.api.exceptions import ApiError
 
 
 def get_qiskit_status(status: str) -> JobStatus:
@@ -16,21 +15,35 @@ def get_qiskit_status(status: str) -> JobStatus:
     :param status:  String with job's status description.
     :return: JobStatus
 
-    :raise C12SimJobError if unknown status is given
+    :raise: C12SimJobError if unknown status is given
     """
-    match status.upper().strip():
-        case "QUEUED":
-            return JobStatus.QUEUED
-        case "FINISHED":
-            return JobStatus.DONE
-        case "RUNNING":
-            return JobStatus.RUNNING
-        case "ERROR":
-            return JobStatus.ERROR
-        case "CANCELLED":
-            return JobStatus.CANCELLED
-        case _:
-            raise C12SimJobError(f"Unknown job state {status}")
+
+    status = status.upper().strip()
+    if status == "QUEUED":
+        return JobStatus.QUEUED
+    if status == "FINISHED":
+        return JobStatus.DONE
+    if status == "RUNNING":
+        return JobStatus.RUNNING
+    if status == "ERROR":
+        return JobStatus.ERROR
+    if status == "CANCELLED":
+        return JobStatus.CANCELLED
+    raise C12SimJobError(f"Unknown job state {status}")
+
+    # match status.upper().strip():
+    #     case "QUEUED":
+    #         return JobStatus.QUEUED
+    #     case "FINISHED":
+    #         return JobStatus.DONE
+    #     case "RUNNING":
+    #         return JobStatus.RUNNING
+    #     case "ERROR":
+    #         return JobStatus.ERROR
+    #     case "CANCELLED":
+    #         return JobStatus.CANCELLED
+    #     case _:
+    #         raise C12SimJobError(f"Unknown job state {status}")
 
 
 class C12SimJob(JobV1):
@@ -61,14 +74,12 @@ class C12SimJob(JobV1):
         try:
             result = self._backend.request.get_job_result(self._job_id, timeout, wait)
         except ApiError as err:
-            raise C12SimApiError(
-                "Unexpected error happened during the accessing the remote server"
-            ) from err
+            raise C12SimApiError("Unexpected error happened during the accessing the remote server") from err
         except TimeoutError as err2:
             raise C12SimJobError("Timeout occurred while waiting for job execution") from err2
 
         job_status = get_qiskit_status(result["status"])
-        print(job_status)
+
         if job_status != JobStatus.ERROR:
             counts = result["results"]["counts"]
             statevector = np.asarray(result["results"]["statevector"])
@@ -100,8 +111,6 @@ class C12SimJob(JobV1):
         try:
             status = self._backend.request.get_job_status(self._job_id)
         except ApiError as err:
-            raise C12SimApiError(
-                "Unexpected error happened during the accessing the remote server"
-            ) from err
+            raise C12SimApiError("Unexpected error happened during the accessing the remote server") from err
 
         return get_qiskit_status(status)

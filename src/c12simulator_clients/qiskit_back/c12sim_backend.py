@@ -1,16 +1,17 @@
 from typing import Iterable, List, Optional, Dict, Tuple, Union, NewType
 from numpy import pi
 from qiskit.circuit.equivalence_library import SessionEquivalenceLibrary
+from qiskit.compiler.transpiler import transpile
 from qiskit.providers import BackendV2, Provider, Options
 from qiskit.transpiler import Target, InstructionProperties
 from qiskit.circuit import Measure, Parameter, QuantumCircuit, QuantumRegister
 from qiskit.circuit.library import RXGate, RYGate, RZGate, iSwapGate, CRXGate, CXGate
 
-from c12simulator.api.client import Request
-from c12simulator.api.exceptions import ApiError
-from c12simulator.qiskit_back.exceptions import C12SimJobError
+from c12simulator_clients.api.client import Request
+from c12simulator_clients.api.exceptions import ApiError
+from c12simulator_clients.qiskit_back.exceptions import C12SimJobError
 
-from c12simulator.qiskit_back.c12sim_job import C12SimJob
+from c12simulator_clients.qiskit_back.c12sim_job import C12SimJob
 
 gate_name_to_instruction_mapper = {
     "rx": RXGate(Parameter("theta")),
@@ -155,9 +156,7 @@ class C12SimBackend(BackendV2):
 
     @property
     def dtm(self) -> float:
-        raise NotImplementedError(
-            f"System time resolution of output signals is not supported by {self._backend_name}."
-        )
+        raise NotImplementedError(f"System time resolution of output signals is not supported by {self._backend_name}.")
 
     @property
     def meas_map(self) -> List[List[int]]:
@@ -175,7 +174,7 @@ class C12SimBackend(BackendV2):
     def control_channel(self, qubits: Iterable[int]):
         raise NotImplementedError(f"Control channel is not supported by {self._backend_name}.")
 
-    def run(self, run_input, **options) -> C12SimJob:
+    def run(self, run_input, **options) -> Union[C12SimJob, List[C12SimJob]]:
         """
             This method returns a :class:`~qiskit.providers.Job` object that runs circuits.
 
@@ -197,7 +196,19 @@ class C12SimBackend(BackendV2):
         if not isinstance(run_input, list):
             run_input = [run_input]
 
+        jobs = []
+
         for circuit in run_input:
+            if not isinstance(circuit, QuantumCircuit):
+                # Skip the elements that are not QuantumCircuit
+                continue
+
+            # This part of transpilation to a basis set of circuit before sending qasm string
+            # is done because of the bug in qiskit qasm function
+            # see: https://github.com/Qiskit/qiskit-terra/issues?q=is%3Aissue%20is%3Aopen%20Qasm%20%22Cannot%20find%20gate%20definition%22
+            # It has been suggested that the best way is to transpile it to some basis set
+            circuit = transpile(circuit, basis_gates=["rx", "ry", "rz", "cx"])
+
             qasm = circuit.qasm(formatted=False)
             try:
                 job_uuid = self._request.start_job(
@@ -206,6 +217,6 @@ class C12SimBackend(BackendV2):
             except ApiError as err:
                 raise C12SimJobError("Error starting a job") from err
 
-            return C12SimJob(
-                backend=self, job_id=job_uuid, qasm=qasm, shots=shots, result=result_type
-            )
+            jobs.append(C12SimJob(backend=self, job_id=job_uuid, qasm=qasm, shots=shots, result=result_type))
+
+        return jobs if len(jobs) > 1 else jobs[0]

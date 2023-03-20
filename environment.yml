@@ -1,4 +1,4 @@
-name: C12QEsimulator
+name: c12simulator_clients
 channels:
   - defaults
 dependencies:

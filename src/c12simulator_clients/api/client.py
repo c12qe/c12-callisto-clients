@@ -1,25 +1,28 @@
 from typing import Optional
 import time
+import json
 import requests
-from c12simulator.api.configs import (
+from c12simulator_clients.api.configs import (
     API_MAXJOBS_URL,
     API_BACKENDS_URL,
     API_QUERY_URL,
     API_JOB_STATUS_URL,
     API_USER_JOBS,
 )
-from c12simulator.api.exceptions import ApiError
+from c12simulator_clients.api.exceptions import ApiError
 
 
 class Request:
     """Facade for the API requests to the C12 simulator backend."""
 
-    def __init__(self, auth_token: str):
+    def __init__(self, auth_token: str, verbose: bool = False):
         """
         :param auth_token:  authorisation token of a user that is used for access
                 to the C12 APIs
+        :param verbose: if detailed printing is active
         """
         self._auth_token = auth_token
+        self._verbose = verbose
 
         # Setting the header with a token
         self._auth_header = {"Authorization": "Bearer " + self._auth_token}
@@ -60,17 +63,26 @@ class Request:
         if method not in ("get", "put", "post", "patch", "delete"):
             raise ValueError(f"Wrong parameter for method argument: {method}")
 
-        response = requests.request(method=method, url=url, params=params, headers=headers)
+        if self._verbose:
+            print(f"Calling API {method}:{url} with params {params}")
+
+        if method == "post":
+            response = requests.request(method=method, url=url, data=json.dumps(params), headers=headers)
+        else:
+            response = requests.request(method=method, url=url, params=params, headers=headers)
         status = response.status_code
 
+        if self._verbose:
+            print(f"Response {response.status_code}")
+
         if status == 401:
-            raise PermissionError(
-                "You do not have a proper credentials to access the requested endpoint."
-            )
+            raise PermissionError("You do not have a proper credentials to access the requested endpoint.")
 
         if status < 200 or status >= 300:
             raise ApiError(f"Error occurred during the execution of the request: {status}")
 
+        if self._verbose:
+            print(f"Response body: {response.json()}")
         data = response.json()
 
         if data is None:
@@ -78,9 +90,7 @@ class Request:
 
         return data
 
-    def get_job_result(
-        self, job_uuid: str, timeout: Optional[float] = None, wait: float = 5
-    ) -> object:
+    def get_job_result(self, job_uuid: str, timeout: Optional[float] = None, wait: float = 5) -> object:
         """
          Wait for the job state is finished or an error during the job execution
          occurred.
@@ -88,6 +98,7 @@ class Request:
         :param job_uuid: job id
         :param timeout: seconds to wait for a job (if None wait forever)
         :param wait: seconds between queries
+
         :return:  json with job information (dict)
 
         :raise ApiError if error in API communication occurred
@@ -99,13 +110,19 @@ class Request:
             raise ValueError(f"Parameter wait cannot be smaller than 0.5s ({wait})")
 
         start = time.time()  # the current time in seconds
+        if self._verbose:
+            print("Getting job result... ")
         while True:
             data = self.do_request(API_QUERY_URL, method="get", params=params)
             job_status = data["status"]
+
+            time_diff = time.time() - start
+            if self._verbose:
+                print(f"{time_diff:.3}s : job status: {job_status}")
+
             if job_status in ("ERROR", "FINISHED", "CANCELLED"):
                 return data
 
-            time_diff = time.time() - start
             if timeout is not None and time_diff >= timeout:
                 raise TimeoutError(f"Timeout while waiting for job {job_uuid}")
 

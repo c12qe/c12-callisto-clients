@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "C12QEsimulator"
+name = "c12simulator-clients"
 version = "0.0.1"
 description = ""
 authors = ["Viktor Radovic"]
@@ -8,6 +8,7 @@ authors = ["Viktor Radovic"]
 python = "~3.10"
 qiskit = "^0.42.0"
 requests = "^2.28.2"
+pydantic = "^1.10.6"
 
 [tool.poetry.dev-dependencies]
 black = {extras = ["d"], version = "^23.1.0"}
