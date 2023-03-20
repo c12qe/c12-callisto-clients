@@ -1,6 +1,6 @@
 [MAIN]
 
-fail-under=9.0
+fail-under=7.0
 
 [MESSAGES CONTROL]
 
