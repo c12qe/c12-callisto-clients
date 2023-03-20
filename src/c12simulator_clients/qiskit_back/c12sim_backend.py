@@ -13,6 +13,7 @@ from c12simulator_clients.qiskit_back.exceptions import C12SimJobError
 
 from c12simulator_clients.qiskit_back.c12sim_job import C12SimJob
 
+
 gate_name_to_instruction_mapper = {
     "rx": RXGate(Parameter("theta")),
     "ry": RYGate(Parameter("theta")),
@@ -156,7 +157,9 @@ class C12SimBackend(BackendV2):
 
     @property
     def dtm(self) -> float:
-        raise NotImplementedError(f"System time resolution of output signals is not supported by {self._backend_name}.")
+        raise NotImplementedError(
+            f"System time resolution of output signals is not supported by {self._backend_name}."
+        )
 
     @property
     def meas_map(self) -> List[List[int]]:
@@ -217,6 +220,8 @@ class C12SimBackend(BackendV2):
             except ApiError as err:
                 raise C12SimJobError("Error starting a job") from err
 
-            jobs.append(C12SimJob(backend=self, job_id=job_uuid, qasm=qasm, shots=shots, result=result_type))
+            jobs.append(
+                C12SimJob(backend=self, job_id=job_uuid, qasm=qasm, shots=shots, result=result_type)
+            )
 
         return jobs if len(jobs) > 1 else jobs[0]

@@ -67,16 +67,22 @@ class Request:
             print(f"Calling API {method}:{url} with params {params}")
 
         if method == "post":
-            response = requests.request(method=method, url=url, data=json.dumps(params), headers=headers)
+            response = requests.request(
+                method=method, url=url, data=json.dumps(params), headers=headers, timeout=60
+            )
         else:
-            response = requests.request(method=method, url=url, params=params, headers=headers)
+            response = requests.request(
+                method=method, url=url, params=params, headers=headers, timeout=60
+            )
         status = response.status_code
 
         if self._verbose:
             print(f"Response {response.status_code}")
 
         if status == 401:
-            raise PermissionError("You do not have a proper credentials to access the requested endpoint.")
+            raise PermissionError(
+                "You do not have a proper credentials to access the requested endpoint."
+            )
 
         if status < 200 or status >= 300:
             raise ApiError(f"Error occurred during the execution of the request: {status}")
@@ -90,7 +96,9 @@ class Request:
 
         return data
 
-    def get_job_result(self, job_uuid: str, timeout: Optional[float] = None, wait: float = 5) -> object:
+    def get_job_result(
+        self, job_uuid: str, timeout: Optional[float] = None, wait: float = 5
+    ) -> object:
         """
          Wait for the job state is finished or an error during the job execution
          occurred.
@@ -178,6 +186,11 @@ class Request:
         return data["backends"]
 
     def get_job_status(self, job_uuid: str) -> str:
+        """
+        Get the status of a running job.
+        :param job_uuid: job uuid
+        :return: status of a job
+        """
         params = {"job_uuid": job_uuid}
         data = self.do_request(API_JOB_STATUS_URL, method="get", params=params)
 
@@ -187,6 +200,13 @@ class Request:
         return data["status"]
 
     def get_user_jobs(self, limit: int, offset: int) -> list:
+        """
+        Get a list of a running job for a specific user, with a support
+        for paging.
+        :param limit:  number of records
+        :param offset:  offset
+        :return:  list of running jobs
+        """
         params = {"number_of_records": limit, "offset": offset}
         data = self.do_request(API_USER_JOBS, method="get", params=params)
 

@@ -46,7 +46,9 @@ class C12SimProvider(ProviderV1):
         except PermissionError:
             return []
         except ApiError as api_err:
-            raise C12SimApiError("Unexpected error happened during the accessing the remote server") from api_err
+            raise C12SimApiError(
+                "Unexpected error happened during the accessing the remote server"
+            ) from api_err
 
     def get_backend(self, name=None, **kwargs) -> Union[C12SimBackend, None]:
         """
@@ -79,6 +81,8 @@ class C12SimProvider(ProviderV1):
         if self._user_configs.verbose:
             print(f"Backend properties {properties}")
 
-        backend = C12SimBackend(provider=self, name=name, request=self._request, properties=properties[0])
+        backend = C12SimBackend(
+            provider=self, name=name, request=self._request, properties=properties[0]
+        )
 
         return backend

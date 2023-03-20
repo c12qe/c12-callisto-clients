@@ -6,6 +6,7 @@ from qiskit.providers import JobStatus, JobV1, BackendV2
 from qiskit.result.models import ExperimentResult, ExperimentResultData
 from c12simulator_clients.qiskit_back.exceptions import C12SimApiError, C12SimJobError
 
+
 from c12simulator_clients.api.exceptions import ApiError
 
 
@@ -47,6 +48,8 @@ def get_qiskit_status(status: str) -> JobStatus:
 
 
 class C12SimJob(JobV1):
+    """Class representing the C12Sim Job"""
+
     def __init__(self, backend: BackendV2, job_id: str, **metadata: Optional[dict]):
         super().__init__(backend=backend, job_id=job_id, metadata=metadata)
         self._job_id = job_id
@@ -74,7 +77,9 @@ class C12SimJob(JobV1):
         try:
             result = self._backend.request.get_job_result(self._job_id, timeout, wait)
         except ApiError as err:
-            raise C12SimApiError("Unexpected error happened during the accessing the remote server") from err
+            raise C12SimApiError(
+                "Unexpected error happened during the accessing the remote server"
+            ) from err
         except TimeoutError as err2:
             raise C12SimJobError("Timeout occurred while waiting for job execution") from err2
 
@@ -111,6 +116,8 @@ class C12SimJob(JobV1):
         try:
             status = self._backend.request.get_job_status(self._job_id)
         except ApiError as err:
-            raise C12SimApiError("Unexpected error happened during the accessing the remote server") from err
+            raise C12SimApiError(
+                "Unexpected error happened during the accessing the remote server"
+            ) from err
 
         return get_qiskit_status(status)
