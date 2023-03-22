@@ -6,7 +6,7 @@ with open("README.MD", "r") as fp:
 
 setup(
     name="c12simulator_clients",
-    version="0.0.13",
+    version="0.0.18",
     author="C12 Quantum Electronics",
     author_email="viktor@c12qe.com",
     description="Different clients for access to the C12 simulator",
@@ -17,7 +17,7 @@ setup(
         "Homepage": "https://www.c12qe.com",
         "Source code": "https://github.com/c12qe/c12simulator-clients",
         "Issues": "https://github.com/c12qe/c12simulator-clients/issues",
-        "Documentation": "https://github.com/c12qe/c12simulator-clients/README.md",
+        "Documentation": "https://github.com/c12qe/c12simulator-clients/tree/master/docs",
     },
     classifiers=[
         "Programming Language :: Python :: 3 :: Only",

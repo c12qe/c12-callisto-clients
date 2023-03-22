@@ -1,6 +1,7 @@
 from typing import Optional
 from datetime import datetime
 import numpy as np
+from qiskit import QuantumCircuit
 from qiskit.result import Result
 from qiskit.providers import JobStatus, JobV1, BackendV2
 from qiskit.result.models import ExperimentResult, ExperimentResultData
@@ -121,3 +122,23 @@ class C12SimJob(JobV1):
             ) from err
 
         return get_qiskit_status(status)
+
+    def get_qasm(self) -> Optional[str]:
+        """
+        Method returns the qasm string for a given job.
+        :return: qasm str or None
+        """
+        if self.metadata is None or "qasm" not in self.metadata["metadata"]:
+            return None
+        return self.metadata["metadata"]["qasm"]
+
+    def get_circuit(self) -> Optional[QuantumCircuit]:
+        """
+        Method return QuantumCircuit object for a given job.
+        :return: QuantumCircuit or None
+        """
+        qasm_str = self.get_qasm()
+        if qasm_str is None:
+            return None
+
+        return QuantumCircuit.from_qasm_str(qasm_str)
