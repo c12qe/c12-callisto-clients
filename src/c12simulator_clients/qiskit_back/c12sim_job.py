@@ -85,7 +85,6 @@ class C12SimJob(JobV1):
             raise C12SimJobError("Timeout occurred while waiting for job execution") from err2
 
         job_status = get_qiskit_status(result["status"])
-
         if job_status != JobStatus.ERROR:
             counts = result["results"]["counts"]
             statevector = np.asarray(result["results"]["statevector"])

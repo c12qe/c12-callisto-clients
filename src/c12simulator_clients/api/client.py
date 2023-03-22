@@ -8,6 +8,7 @@ from c12simulator_clients.api.configs import (
     API_QUERY_URL,
     API_JOB_STATUS_URL,
     API_USER_JOBS,
+    API_GET_JOB,
 )
 from c12simulator_clients.api.exceptions import ApiError
 
@@ -198,6 +199,20 @@ class Request:
             raise ApiError("Unexpected error getting available system backends.")
 
         return data["status"]
+
+    def get_job(self, job_uuid: str) -> dict:
+        """
+        Get a specific job with a given uuid.
+        :param job_uuid: job_id
+        :return: dict of job data
+        """
+        params = {"job_uuid": job_uuid}
+        data = self.do_request(API_GET_JOB, method="get", params=params)
+
+        if "job" not in data:
+            raise ApiError("Unexpected error getting available system backends.")
+
+        return data["job"]
 
     def get_user_jobs(self, limit: int, offset: int) -> list:
         """

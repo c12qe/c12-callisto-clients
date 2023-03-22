@@ -135,7 +135,7 @@ class C12SimBackend(BackendV2):
         try:
             jobs = self._request.get_user_jobs(limit, offset)
         except ApiError as err:
-            raise C12SimJobError("Error starting a job") from err
+            raise C12SimJobError("Error getting user jobs") from err
 
         result = [
             C12SimJob(
@@ -149,6 +149,28 @@ class C12SimBackend(BackendV2):
         ]
 
         return result
+
+    def get_job(self, job_uuid: str) -> Optional[C12SimJob]:
+        """
+        Get the job with a given uuid.
+        :param job_uuid:  uuid of a job
+        :return:  None or an instance of C12SimJob class
+        """
+        try:
+            job = self._request.get_job(job_uuid)
+        except ApiError as err:
+            raise C12SimJobError("Error getting a job") from err
+
+        if job is None:
+            return None
+
+        return C12SimJob(
+            backend=self,
+            job_id=job["uuid"],
+            qasm=job["task"],
+            shots=job["options"]["shots"],
+            result=job["options"]["result"],
+        )
 
     @property
     def max_circuits(self):

@@ -30,3 +30,7 @@
 .idea/**/dbnavigator.xml
 
 .DS_Store
+src/tmp.py
+build/*
+dist/*
+c12simulator_clients.egg-info/*
