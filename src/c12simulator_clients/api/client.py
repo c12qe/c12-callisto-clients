@@ -207,7 +207,7 @@ class Request:
         :param offset:  offset
         :return:  list of running jobs
         """
-        params = {"number_of_records": limit, "offset": offset}
+        params = {"limit": limit, "offset": offset}
         data = self.do_request(API_USER_JOBS, method="get", params=params)
 
         if "jobs" not in data:

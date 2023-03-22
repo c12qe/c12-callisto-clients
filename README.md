@@ -69,7 +69,7 @@ Detailed information of the command structure can be obtained using command `pyt
 
 <li> <b> <u>From the installed package:</u></b> </li>
 
-Jupyter notebooks are given on the link: <a href="?">notebooks</a>
+Jupyter notebooks are given on the link: <a href="https://github.com/c12qe/c12simulator-clients/docs/">notebooks</a>
 
 </ol>
 

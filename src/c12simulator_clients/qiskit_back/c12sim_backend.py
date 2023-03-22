@@ -4,8 +4,9 @@ from qiskit.circuit.equivalence_library import SessionEquivalenceLibrary
 from qiskit.compiler.transpiler import transpile
 from qiskit.providers import BackendV2, Provider, Options
 from qiskit.transpiler import Target, InstructionProperties
-from qiskit.circuit import Measure, Parameter, QuantumCircuit, QuantumRegister
+from qiskit.circuit import Measure, Parameter, QuantumCircuit
 from qiskit.circuit.library import RXGate, RYGate, RZGate, iSwapGate, CRXGate, CXGate
+from qiskit.quantum_info import TwoQubitBasisDecomposer
 
 from c12simulator_clients.api.client import Request
 from c12simulator_clients.api.exceptions import ApiError
@@ -100,11 +101,9 @@ class C12SimBackend(BackendV2):
         for gate_name in basis_gates:
             inst = gate_name_to_instruction_mapper[gate_name]
             if gate_name == "crx":
-                qreg_q = QuantumRegister(2, "q")
-                circuit = QuantumCircuit(qreg_q)
-                circuit.crx(pi, qreg_q[0], qreg_q[1])
-
-                SessionEquivalenceLibrary.add_equivalence(CXGate(), circuit)
+                decomposer = TwoQubitBasisDecomposer(CRXGate(pi))
+                circ = decomposer(CXGate().to_matrix())
+                SessionEquivalenceLibrary.add_equivalence(CXGate(), circ)
 
             inst_ops: InstOpsType = {}
             if inst.num_qubits == 1:
