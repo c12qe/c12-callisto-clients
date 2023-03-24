@@ -153,7 +153,7 @@ class Request:
             "qasm_str": qasm_str,
             "num_shots": shots,
             "result": result,
-            "backend-name": backend_name,
+            "backend_name": backend_name,
         }
         data = self.do_request(API_QUERY_URL, method="post", params=params)
 
