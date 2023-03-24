@@ -85,24 +85,33 @@ class C12SimJob(JobV1):
             raise C12SimJobError("Timeout occurred while waiting for job execution") from err2
 
         job_status = get_qiskit_status(result["status"])
-        if job_status != JobStatus.ERROR:
+
+        experiment_results = []
+
+        if job_status == JobStatus.DONE:
+            if "counts" not in result["results"] or "statevector" not in result["results"]:
+                raise C12SimJobError("Error getting the information from the system.")
+
             counts = result["results"]["counts"]
             statevector = np.asarray(result["results"]["statevector"])
             statevector = np.array(list(map(lambda item: complex(item), statevector)))
             data = ExperimentResultData(counts=counts, statevector=statevector)
-        experiment_results = ExperimentResult(
-            shots=self.shots(),
-            success=True,
-            status=self.status().name,
-            data=data if job_status == JobStatus.DONE else None,
-        )
+            experiment_results.append(
+                ExperimentResult(
+                    shots=self.shots(),
+                    success=job_status == JobStatus.DONE,
+                    status=self.status().name,
+                    data=data if job_status == JobStatus.DONE else None,
+                )
+            )
+
         return Result(
             backend_name=self._backend,
             backend_version=self._backend.version,
             job_id=self._job_id,
             qobj_id=0,
-            success=job_status not in (JobStatus.RUNNING, JobStatus.ERROR, JobStatus.QUEUED),
-            results=[experiment_results],
+            success=job_status == JobStatus.DONE,
+            results=experiment_results,
             status=job_status,
         )
 
@@ -122,21 +131,29 @@ class C12SimJob(JobV1):
 
         return get_qiskit_status(status)
 
-    def get_qasm(self) -> Optional[str]:
+    def get_qasm(self, transpiled: bool = False) -> Optional[str]:
         """
         Method returns the qasm string for a given job.
         :return: qasm str or None
         """
         if self.metadata is None or "qasm" not in self.metadata["metadata"]:
             return None
-        return self.metadata["metadata"]["qasm"]
+        if transpiled:
+            return self.metadata["metadata"]["qasm"]
+        else:
+            # Added for some backward compatibility
+            return (
+                self.metadata["metadata"]["qasm_orig"]
+                if "qasm_orig" in self.metadata["metadata"]
+                else None
+            )
 
-    def get_circuit(self) -> Optional[QuantumCircuit]:
+    def get_circuit(self, transpiled: bool = False) -> Optional[QuantumCircuit]:
         """
         Method return QuantumCircuit object for a given job.
         :return: QuantumCircuit or None
         """
-        qasm_str = self.get_qasm()
+        qasm_str = self.get_qasm(transpiled=transpiled)
         if qasm_str is None:
             return None
 

@@ -6,7 +6,7 @@ with open("README.MD", "r") as fp:
 
 setup(
     name="c12simulator_clients",
-    version="0.0.19",
+    version="0.0.22",
     author="C12 Quantum Electronics",
     author_email="viktor@c12qe.com",
     description="Different clients for access to the C12 simulator",

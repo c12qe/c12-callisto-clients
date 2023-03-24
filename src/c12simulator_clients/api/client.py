@@ -141,7 +141,7 @@ class Request:
         """
         Call the API to start the job.
 
-        :param qasm_str:  QASM string with quantum circuit
+        :param qasm_str: QASM string with transpiled quantum circuit
         :param shots:  Number of shots for the simulation
         :param result: what is desired output (statevector, counts, density_matrix)
         :param backend_name: the name of the backend to run on
@@ -151,7 +151,7 @@ class Request:
         """
         params = {
             "qasm_str": qasm_str,
-            "shots": shots,
+            "num_shots": shots,
             "result": result,
             "backend-name": backend_name,
         }

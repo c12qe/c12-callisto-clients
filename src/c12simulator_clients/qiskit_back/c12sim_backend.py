@@ -1,12 +1,11 @@
 from typing import Iterable, List, Optional, Dict, Tuple, Union, NewType
 from numpy import pi
 from qiskit.circuit.equivalence_library import SessionEquivalenceLibrary
-from qiskit.compiler.transpiler import transpile
+from qiskit.quantum_info import TwoQubitBasisDecomposer
 from qiskit.providers import BackendV2, Provider, Options
 from qiskit.transpiler import Target, InstructionProperties
 from qiskit.circuit import Measure, Parameter, QuantumCircuit
 from qiskit.circuit.library import RXGate, RYGate, RZGate, iSwapGate, CRXGate, CXGate
-from qiskit.quantum_info import TwoQubitBasisDecomposer
 
 from c12simulator_clients.api.client import Request
 from c12simulator_clients.api.exceptions import ApiError
@@ -144,6 +143,7 @@ class C12SimBackend(BackendV2):
                 qasm=item["task"],
                 shots=item["options"]["shots"],
                 result=item["options"]["result"],
+                qasm_orig=item["task_orig"],
             )
             for item in jobs
         ]
@@ -170,6 +170,7 @@ class C12SimBackend(BackendV2):
             qasm=job["task"],
             shots=job["options"]["shots"],
             result=job["options"]["result"],
+            qasm_orig=job["task_orig"],
         )
 
     @property
@@ -227,22 +228,42 @@ class C12SimBackend(BackendV2):
                 # Skip the elements that are not QuantumCircuit
                 continue
 
-            # This part of transpilation to a basis set of circuit before sending qasm string
-            # is done because of the bug in qiskit qasm function
             # see: https://github.com/Qiskit/qiskit-terra/issues?q=is%3Aissue%20is%3Aopen%20Qasm%20%22Cannot%20find%20gate%20definition%22
-            # It has been suggested that the best way is to transpile it to some basis set
-            circuit = transpile(circuit, basis_gates=["rx", "ry", "rz", "cx"])
+            # It has been suggested that the best way is to transpile it to some basis gate set that is simpler
+            # For some circuits Qiskit's qasm() function can return wrong qasm fmts.
 
             qasm = circuit.qasm(formatted=False)
+            print(qasm)
+            try:
+                QuantumCircuit.from_qasm_str(qasm)
+            except Exception:
+                raise C12SimJobError(
+                    "There has been a problem while converting the circuit for OpenQASM fmt"
+                    " if possible try transpiling the circuit to more basic gate set. See documentation for more"
+                    " information"
+                )
+
             try:
                 job_uuid = self._request.start_job(
-                    qasm_str=qasm, shots=shots, result=result_type, backend_name=self._backend_name
+                    qasm_str=qasm,
+                    shots=shots,
+                    result=result_type,
+                    backend_name=self._backend_name,
                 )
             except ApiError as err:
                 raise C12SimJobError("Error starting a job") from err
 
+            # Get the transpiled one
+
             jobs.append(
-                C12SimJob(backend=self, job_id=job_uuid, qasm=qasm, shots=shots, result=result_type)
+                C12SimJob(
+                    backend=self,
+                    job_id=job_uuid,
+                    qasm=qasm,
+                    qasm_original=qasm,
+                    shots=shots,
+                    result=result_type,
+                )
             )
 
         return jobs if len(jobs) > 1 else jobs[0]
