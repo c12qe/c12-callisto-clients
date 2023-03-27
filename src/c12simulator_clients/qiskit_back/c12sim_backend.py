@@ -233,7 +233,6 @@ class C12SimBackend(BackendV2):
             # For some circuits Qiskit's qasm() function can return wrong qasm fmts.
 
             qasm = circuit.qasm(formatted=False)
-            print(qasm)
             try:
                 QuantumCircuit.from_qasm_str(qasm)
             except Exception:
