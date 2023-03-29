@@ -3,6 +3,7 @@ from datetime import datetime
 import numpy as np
 from qiskit import QuantumCircuit
 from qiskit.result import Result
+from qiskit.quantum_info import Statevector, DensityMatrix
 from qiskit.providers import JobStatus, JobV1, BackendV2
 from qiskit.result.models import ExperimentResult, ExperimentResultData
 from c12simulator_clients.qiskit_back.exceptions import C12SimApiError, C12SimJobError
@@ -57,6 +58,7 @@ class C12SimJob(JobV1):
         self._backend = backend
         self._date = datetime.now()
         self._metadata = metadata
+        self._result = None
 
     def submit(self):
         """
@@ -73,6 +75,22 @@ class C12SimJob(JobV1):
         Returns: number of shots.
         """
         return self.metadata["metadata"]["shots"] if "shots" in self.metadata["metadata"] else 0
+
+    @staticmethod
+    def _convert_json_to_np_array(data) -> np.ndarray:
+        """Function to convert json string data to numpy array"""
+        array = np.asarray(data)
+        array = np.array(list(map(lambda item: complex(item), array)))
+        return array
+
+    @staticmethod
+    def _convert_json_to_np_matrix(data) -> np.ndarray:
+        """Function to convert json string data to numpy matrix"""
+        matrix = []
+        dm = np.array(data)
+        for i in range(len(dm)):
+            matrix.append(C12SimJob._convert_json_to_np_array(dm[i]))
+        return np.array(matrix)
 
     def result(self, timeout: Optional[float] = None, wait: float = 5):
         try:
@@ -92,10 +110,29 @@ class C12SimJob(JobV1):
             if "counts" not in result["results"] or "statevector" not in result["results"]:
                 raise C12SimJobError("Error getting the information from the system.")
 
+            # Getting the counts & statevector of the circuit after execution
             counts = result["results"]["counts"]
-            statevector = np.asarray(result["results"]["statevector"])
-            statevector = np.array(list(map(lambda item: complex(item), statevector)))
-            data = ExperimentResultData(counts=counts, statevector=statevector)
+            statevector = self._convert_json_to_np_array(result["results"]["statevector"])
+
+            # Additional mid-circuit data (if any)
+            additional_data = {}
+            if "states" in result["results"]:
+                states = result["results"]["states"]
+
+                if "density_matrix" in states and "statevector" in states:
+                    dms = states["density_matrix"]
+                    svs = states["statevector"]
+
+                    for key in svs.keys():
+                        svs[key] = self._convert_json_to_np_array(svs[key])
+
+                    for key in dms.keys():
+                        dms[key] = self._convert_json_to_np_matrix(dms[key])
+
+                    additional_data = {**dms, **svs}
+
+            data = ExperimentResultData(counts=counts, statevector=statevector, **additional_data)
+
             experiment_results.append(
                 ExperimentResult(
                     shots=self.shots(),
@@ -105,7 +142,7 @@ class C12SimJob(JobV1):
                 )
             )
 
-        return Result(
+        self._result = Result(
             backend_name=self._backend,
             backend_version=self._backend.version,
             job_id=self._job_id,
@@ -114,6 +151,8 @@ class C12SimJob(JobV1):
             results=experiment_results,
             status=job_status,
         )
+
+        return self._result
 
     def cancel(self):
         pass
@@ -158,3 +197,42 @@ class C12SimJob(JobV1):
             return None
 
         return QuantumCircuit.from_qasm_str(qasm_str)
+
+    def get_mid_statevector(self, barrier: int) -> Optional[Statevector]:
+        """
+        Function to get the mid-circuit statevector (if any).
+        :param barrier: ordinal number of barrier
+        :return: Statevector instance
+        """
+
+        if self._result is None:
+            raise RuntimeError(
+                f"There is no results stored in the job class. You should call result() "
+                f"method before calling {self.get_mid_statevector.__name__}"
+            )
+
+        result_data = self._result.data()
+
+        if f"sv{barrier}" not in result_data:
+            return None
+
+        return Statevector(result_data[f"sv{barrier}"])
+
+    def get_mid_density_matrix(self, barrier: int) -> Optional[DensityMatrix]:
+        """
+        Function to get the mid-circuit density matrix (if any).
+        :param barrier: ordinal number of barrier
+        :return: DansityMatrix instance
+        """
+        if self._result is None:
+            raise RuntimeError(
+                f"There is no results stored in the job class. You should call result() "
+                f"method before calling {self.get_mid_density_matrix.__name__}"
+            )
+
+        result_data = self._result.data()
+
+        if f"dm{barrier}" not in result_data:
+            return None
+
+        return DensityMatrix(result_data[f"dm{barrier}"])

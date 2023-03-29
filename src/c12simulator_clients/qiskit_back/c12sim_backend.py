@@ -259,7 +259,7 @@ class C12SimBackend(BackendV2):
                     backend=self,
                     job_id=job_uuid,
                     qasm=qasm,
-                    qasm_original=qasm,
+                    qasm_orig=qasm,
                     shots=shots,
                     result=result_type,
                 )
