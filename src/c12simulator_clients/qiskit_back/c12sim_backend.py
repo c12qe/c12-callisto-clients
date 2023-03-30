@@ -13,7 +13,6 @@ from c12simulator_clients.qiskit_back.exceptions import C12SimJobError
 
 from c12simulator_clients.qiskit_back.c12sim_job import C12SimJob
 
-
 gate_name_to_instruction_mapper = {
     "rx": RXGate(Parameter("theta")),
     "ry": RYGate(Parameter("theta")),

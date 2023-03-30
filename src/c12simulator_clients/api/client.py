@@ -98,13 +98,20 @@ class Request:
         return data
 
     def get_job_result(
-        self, job_uuid: str, timeout: Optional[float] = None, wait: float = 5
+        self,
+        job_uuid: str,
+        output_data: str = None,
+        timeout: Optional[float] = None,
+        wait: float = 5,
     ) -> object:
         """
          Wait for the job state is finished or an error during the job execution
          occurred.
 
         :param job_uuid: job id
+        :param output_data: string to override which results to get,
+                values should be 'counts, statevector,density_matrix,states'
+                If no value is specified the one from the DB will be used.
         :param timeout: seconds to wait for a job (if None wait forever)
         :param wait: seconds between queries
 
@@ -113,7 +120,7 @@ class Request:
         :raise ApiError if error in API communication occurred
                TimeoutError if timeout is exceeded
         """
-        params = {"job_uuid": job_uuid}
+        params = {"job_uuid": job_uuid, "output_data": output_data}
 
         if wait < 0.5:
             raise ValueError(f"Parameter wait cannot be smaller than 0.5s ({wait})")

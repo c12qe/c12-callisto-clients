@@ -94,7 +94,12 @@ class C12SimJob(JobV1):
 
     def result(self, timeout: Optional[float] = None, wait: float = 5):
         try:
-            result = self._backend.request.get_job_result(self._job_id, timeout, wait)
+            result = self._backend.request.get_job_result(
+                self._job_id,
+                output_data="counts,statevector,states,density_matrix",
+                timeout=timeout,
+                wait=wait,
+            )
         except ApiError as err:
             raise C12SimApiError(
                 "Unexpected error happened during the accessing the remote server"
