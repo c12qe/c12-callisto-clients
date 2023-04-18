@@ -144,7 +144,7 @@ class Request:
 
             time.sleep(wait)
 
-    def start_job(self, qasm_str: str, shots: int, result: str, backend_name: str) -> str:
+    def start_job(self, qasm_str: str, shots: int, result: str, backend_name: str) -> tuple:
         """
         Call the API to start the job.
 
@@ -152,9 +152,9 @@ class Request:
         :param shots:  Number of shots for the simulation
         :param result: what is desired output (statevector, counts, density_matrix)
         :param backend_name: the name of the backend to run on
-        :return: str (job uuid)
+        :return: tuple str (job uuid) and transpiled qasm str
 
-        :raise ApiError if unexpected API error happened
+        :raise: ApiError if unexpected API error happened
         """
         params = {
             "qasm_str": qasm_str,
@@ -164,10 +164,10 @@ class Request:
         }
         data = self.do_request(API_QUERY_URL, method="post", params=params)
 
-        if "job_uuid" not in data:
+        if "job_uuid" not in data or "transpiled" not in data:
             raise ApiError("Unexpected error when starting a job")
 
-        return data["job_uuid"]
+        return data["job_uuid"], data["transpiled"]
 
     def get_maxjobs(self) -> int:
         """

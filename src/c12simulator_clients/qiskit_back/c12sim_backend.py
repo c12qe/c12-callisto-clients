@@ -242,7 +242,7 @@ class C12SimBackend(BackendV2):
                 )
 
             try:
-                job_uuid = self._request.start_job(
+                job_uuid, transpiled_qasm = self._request.start_job(
                     qasm_str=qasm,
                     shots=shots,
                     result=result_type,
@@ -257,7 +257,7 @@ class C12SimBackend(BackendV2):
                 C12SimJob(
                     backend=self,
                     job_id=job_uuid,
-                    qasm=qasm,
+                    qasm=transpiled_qasm,
                     qasm_orig=qasm,
                     shots=shots,
                     result=result_type,
