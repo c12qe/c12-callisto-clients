@@ -1,6 +1,7 @@
-from typing import Optional
+from typing import Optional, Union
 import time
 import json
+import numpy as np
 import requests
 from c12simulator_clients.api.configs import (
     API_MAXJOBS_URL,
@@ -9,6 +10,7 @@ from c12simulator_clients.api.configs import (
     API_JOB_STATUS_URL,
     API_USER_JOBS,
     API_GET_JOB,
+    API_PARAMS_URL,
 )
 from c12simulator_clients.api.exceptions import ApiError
 
@@ -144,7 +146,16 @@ class Request:
 
             time.sleep(wait)
 
-    def start_job(self, qasm_str: str, shots: int, result: str, backend_name: str) -> tuple:
+    def start_job(
+        self,
+        qasm_str: str,
+        shots: int,
+        result: str,
+        backend_name: str,
+        ini_noise: bool = False,
+        ini: Union[str, list[np.complexfloating]] = None,
+        physical_params: str = None,
+    ) -> tuple:
         """
         Call the API to start the job.
 
@@ -152,6 +163,9 @@ class Request:
         :param shots:  Number of shots for the simulation
         :param result: what is desired output (statevector, counts, density_matrix)
         :param backend_name: the name of the backend to run on
+        :param ini_noise: specify if we want to apply a noise to the initialisation of the circuit
+        :param ini: initial state of the circuit as a string (label) or array of complex numbers
+        :param physical_params: stringify json with physical parameters
         :return: tuple str (job uuid) and transpiled qasm str
 
         :raise: ApiError if unexpected API error happened
@@ -162,6 +176,20 @@ class Request:
             "result": result,
             "backend_name": backend_name,
         }
+
+        if ini is not None:
+            if isinstance(ini, str):
+                params["inilabel"] = ini
+            else:
+                params["inistatevector"] = np.array2string(
+                    np.array(ini), separator=",", suppress_small=True
+                )
+        if ini_noise:
+            params["ininoise"] = True
+
+        if physical_params is not None:
+            params["physical_params"] = physical_params
+
         data = self.do_request(API_QUERY_URL, method="post", params=params)
 
         if "job_uuid" not in data or "transpiled" not in data:
@@ -180,6 +208,21 @@ class Request:
             raise ApiError("Unexpected error getting a max allowed jobs for a user.")
 
         return data["maxjobs"]
+
+    def get_params(self) -> dict:
+        """
+        Call to the API to get the physical parameters of the C12 system.
+        :return: list of parameters
+
+        :raise: ApiError if unexpected API error has happened
+        """
+
+        data = self.do_request(API_PARAMS_URL, method="get")
+
+        if "physical_params" not in data:
+            raise ApiError("Unexpected error getting physical parameters of the system.")
+
+        return data["physical_params"]
 
     def get_backends(self) -> list:
         """

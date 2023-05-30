@@ -198,6 +198,33 @@ class C12SimBackend(BackendV2):
     def control_channel(self, qubits: Iterable[int]):
         raise NotImplementedError(f"Control channel is not supported by {self._backend_name}.")
 
+    def _prepare_qasm_file(self, circuit: QuantumCircuit) -> str:
+        tmp_qc = circuit.copy_empty_like()
+
+        for instruction, qargs, cargs in circuit:
+            if instruction.name in ["initialize"]:
+                # Qiskit is not able to convert "initialize" instruction to OpenQASM 2, so we need to decompose it first
+                # This is mainly as it is not Unitary instruction
+                # it should be solved for OpenQASM 3
+                # This can be used for all additional changes to the circuits
+
+                ini_circuit = tmp_qc.copy_empty_like()
+                ini_circuit.append(instruction, qargs, cargs)
+                ini_circuit = (
+                    ini_circuit.decompose()
+                )  # It has to be done for the OpenQASM 2.0 it will fail otherwise
+
+                # Pass over the ini_circuit and append it
+                # The best way would be to append two circuits
+                # Currently QuantumCircuit.append() appends only Instructions
+                for ini_instruction, ini_qargs, ini_cargs in ini_circuit:
+                    tmp_qc.append(ini_instruction, ini_qargs, ini_cargs)
+
+            else:
+                tmp_qc.append(instruction, qargs, cargs)
+
+        return tmp_qc.qasm(formatted=False)
+
     def run(self, run_input, **options) -> Union[C12SimJob, List[C12SimJob]]:
         """
             This method returns a :class:`~qiskit.providers.Job` object that runs circuits.
@@ -217,6 +244,9 @@ class C12SimBackend(BackendV2):
         shots = options["shots"] if "shots" in options else 1024
         result_type = "counts,statevector"
 
+        ini_noise = options["ininoise"] if "ininoise" in options else False
+        physical_params = options["physical_params"] if "physical_params" in options else None
+
         if not isinstance(run_input, list):
             run_input = [run_input]
 
@@ -231,7 +261,7 @@ class C12SimBackend(BackendV2):
             # It has been suggested that the best way is to transpile it to some basis gate set that is simpler
             # For some circuits Qiskit's qasm() function can return wrong qasm fmts.
 
-            qasm = circuit.qasm(formatted=False)
+            qasm = self._prepare_qasm_file(circuit)
             try:
                 QuantumCircuit.from_qasm_str(qasm)
             except Exception:
@@ -247,6 +277,8 @@ class C12SimBackend(BackendV2):
                     shots=shots,
                     result=result_type,
                     backend_name=self._backend_name,
+                    ini_noise=ini_noise,
+                    physical_params=physical_params,
                 )
             except ApiError as err:
                 raise C12SimJobError("Error starting a job") from err
@@ -261,6 +293,7 @@ class C12SimBackend(BackendV2):
                     qasm_orig=qasm,
                     shots=shots,
                     result=result_type,
+                    ini_noise=ini_noise,
                 )
             )
 

@@ -1,10 +1,11 @@
-from typing import Optional
+from typing import Optional, Tuple, List
 from datetime import datetime
 import numpy as np
 from qiskit import QuantumCircuit
 from qiskit.result import Result
+from qiskit.providers import JobV1, BackendV2
 from qiskit.quantum_info import Statevector, DensityMatrix
-from qiskit.providers import JobStatus, JobV1, BackendV2
+from qiskit.providers.jobstatus import JobStatus, JOB_FINAL_STATES
 from qiskit.result.models import ExperimentResult, ExperimentResultData
 from c12simulator_clients.qiskit_back.exceptions import C12SimApiError, C12SimJobError
 
@@ -52,13 +53,17 @@ def get_qiskit_status(status: str) -> JobStatus:
 class C12SimJob(JobV1):
     """Class representing the C12Sim Job"""
 
-    def __init__(self, backend: BackendV2, job_id: str, **metadata: Optional[dict]):
+    def __init__(self, backend: BackendV2, job_id: str, **metadata):
         super().__init__(backend=backend, job_id=job_id, metadata=metadata)
-        self._job_id = job_id
-        self._backend = backend
+        self._job_id = job_id  # uuid of the job
+        self._backend = backend  # backend instance
         self._date = datetime.now()
-        self._metadata = metadata
-        self._result = None
+        self._metadata = metadata  # additional data
+        self._result = None  # result of the job
+        self._status = None  # current status of the job
+        self._result_data = None  # row job result data
+        self._error = None
+        self._job_error_msg = None
 
     def submit(self):
         """
@@ -92,7 +97,49 @@ class C12SimJob(JobV1):
             matrix.append(C12SimJob._convert_json_to_np_array(dm[i]))
         return np.array(matrix)
 
-    def result(self, timeout: Optional[float] = None, wait: float = 5):
+    def refresh(self) -> None:
+        """Obtain the latest job information from the server.
+        Function has a side effect of changing private fields.
+        :return: None
+        """
+
+        try:
+            # Get job data
+            job = self._backend.request.get_job(self._job_id)
+        except ApiError as err:
+            raise C12SimJobError("Error getting a job") from err
+
+        if job is None:
+            return None
+
+        self._status = get_qiskit_status(job["status"])
+        self._metadata = {
+            "qasm": job["task"],
+            "shots": job["options"]["shots"],
+            "result": job["options"]["result"],
+            "qasm_orig": job["task_orig"],
+        }
+        self._result_data = job["result"]
+        self._error = job["errors"]
+
+    def _wait_for_completion(
+        self,
+        timeout: Optional[float] = None,
+        wait: float = 5,
+        required_states: Tuple[JobStatus] = JOB_FINAL_STATES,
+    ) -> bool:
+        """
+        Wrapper: waiting for the job completion.
+
+        :param timeout: Seconds until the exception is triggered. None for indefinitely.
+        :param wait: The wait time in seconds between queries.
+        :param required_states: The final job status required.
+        :return: True if the final job status matches one of the required states.
+        """
+
+        if self._status in JOB_FINAL_STATES:
+            return self._status in required_states
+
         try:
             result = self._backend.request.get_job_result(
                 self._job_id,
@@ -107,54 +154,91 @@ class C12SimJob(JobV1):
         except TimeoutError as err2:
             raise C12SimJobError("Timeout occurred while waiting for job execution") from err2
 
-        job_status = get_qiskit_status(result["status"])
+        # Refresh the job params
+        self.refresh()
 
-        experiment_results = []
+        return self._status in required_states
 
-        if job_status == JobStatus.DONE:
-            if "counts" not in result["results"] or "statevector" not in result["results"]:
-                raise C12SimJobError("Error getting the information from the system.")
+    def error_message(self) -> Optional[str]:
+        """
+        Provide details about the reason of a job failure.
+        :return: An error report if the job failed or None
+        """
 
-            # Getting the counts & statevector of the circuit after execution
-            counts = result["results"]["counts"]
-            statevector = self._convert_json_to_np_array(result["results"]["statevector"])
+        if not self._wait_for_completion(required_states=(JobStatus.ERROR,)):
+            return None
 
-            # Additional mid-circuit data (if any)
-            additional_data = {}
-            if "states" in result["results"]:
-                states = result["results"]["states"]
+        if not self._job_error_msg:
+            if not self._error:
+                self.refresh()
 
-                if "density_matrix" in states and "statevector" in states:
-                    dms = states["density_matrix"]
-                    svs = states["statevector"]
+            self._job_error_msg = f"Error: {self._error} "
 
-                    for key in svs.keys():
-                        svs[key] = self._convert_json_to_np_array(svs[key])
+        return self._job_error_msg
 
-                    for key in dms.keys():
-                        dms[key] = self._convert_json_to_np_matrix(dms[key])
+    def _parse_result_data(self) -> List[ExperimentResult]:
+        """
+        Parse result dictionary.
+        :return: Result object or none
+        """
 
-                    additional_data = {**dms, **svs}
+        if self._result_data is None:
+            return []
+        if "counts" not in self._result_data or "statevector" not in self._result_data:
+            raise C12SimJobError("Error getting the information from the system.")
 
-            data = ExperimentResultData(counts=counts, statevector=statevector, **additional_data)
+        # Getting the counts & statevector of the circuit after execution
+        counts = self._result_data["counts"]
+        statevector = self._convert_json_to_np_array(self._result_data["statevector"])
 
-            experiment_results.append(
-                ExperimentResult(
-                    shots=self.shots(),
-                    success=job_status == JobStatus.DONE,
-                    status=self.status().name,
-                    data=data if job_status == JobStatus.DONE else None,
+        # Additional mid-circuit data (if any)
+        additional_data = {}
+        if "states" in self._result_data:
+            states = self._result_data["states"]
+
+            if "density_matrix" in states and "statevector" in states:
+                dms = states["density_matrix"]
+                svs = states["statevector"]
+
+                for key in svs.keys():
+                    svs[key] = self._convert_json_to_np_array(svs[key])
+
+                for key in dms.keys():
+                    dms[key] = self._convert_json_to_np_matrix(dms[key])
+
+                additional_data = {**dms, **svs}
+
+        experiment = ExperimentResult(
+            shots=self.shots(),
+            success=self.status() is JobStatus.DONE,
+            status=self.status().name,
+            data=ExperimentResultData(counts=counts, statevector=statevector, **additional_data),
+        )
+
+        return [experiment]
+
+    def result(self, timeout: Optional[float] = None, wait: float = 5):
+        if not self._wait_for_completion(timeout, wait, required_states=(JobStatus.DONE,)):
+            if self._status is JobStatus.CANCELLED:
+                raise C12SimJobError(
+                    f"Unable to retrieve result for job {self._job_id}. Job was cancelled"
                 )
-            )
+
+            if self._status is JobStatus.ERROR:
+                raise C12SimJobError(
+                    f"Unable to retrieve result for job {self._job_id}. "
+                    f"Job finished with an error state. "
+                    f"Use error_message() method to get more details."
+                )
 
         self._result = Result(
             backend_name=self._backend,
             backend_version=self._backend.version,
             job_id=self._job_id,
             qobj_id=0,
-            success=job_status == JobStatus.DONE,
-            results=experiment_results,
-            status=job_status,
+            success=self._status == JobStatus.DONE,
+            results=self._parse_result_data(),
+            status=self._status,
         )
 
         return self._result
@@ -165,7 +249,14 @@ class C12SimJob(JobV1):
     def backend(self):
         return self._backend
 
-    def status(self):
+    def status(self) -> JobStatus:
+        """
+        Get the latest job status of a current job instance.
+        :return: The status of the job.
+        """
+        if self._status in JOB_FINAL_STATES:
+            return self._status
+
         try:
             status = self._backend.request.get_job_status(self._job_id)
         except ApiError as err:
@@ -173,7 +264,9 @@ class C12SimJob(JobV1):
                 "Unexpected error happened during the accessing the remote server"
             ) from err
 
-        return get_qiskit_status(status)
+        self._status = get_qiskit_status(status)
+
+        return self._status
 
     def get_qasm(self, transpiled: bool = False) -> Optional[str]:
         """

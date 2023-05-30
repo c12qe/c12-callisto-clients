@@ -73,7 +73,6 @@ if __name__ == "__main__":
         job_result = job.result()
         print("Reuslt: ")
         print(job_result.get_counts())
-
         print(job_result.get_statevector())
 
     except Exception as e:
