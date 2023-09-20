@@ -3,7 +3,7 @@ import time
 import json
 import numpy as np
 import requests
-from c12simulator_clients.api.configs import (
+from c12_callisto_clients.api.configs import (
     API_MAXJOBS_URL,
     API_BACKENDS_URL,
     API_QUERY_URL,
@@ -12,7 +12,7 @@ from c12simulator_clients.api.configs import (
     API_GET_JOB,
     API_PARAMS_URL,
 )
-from c12simulator_clients.api.exceptions import ApiError
+from c12_callisto_clients.api.exceptions import ApiError
 
 
 class Request:

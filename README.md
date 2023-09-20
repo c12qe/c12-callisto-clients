@@ -1,7 +1,7 @@
-# c12simulator-clients
+# c12-callisto-clients
 
-`c12simulator-clients` is a Python package with a tools that enables a user to communicate with the 
-C12's remote simulator whose purpose
+`c12-callisto-clients` is a Python package with a tools that enables a user to communicate with the 
+C12's Callisto simulator whose purpose
 is to simulate the operations on the real C12 quantum computer. 
 
 C12’s quantum computer is based on optimized
@@ -12,17 +12,12 @@ elements of the C12 system.
 
 ## Installing
 
-#### From the Test PyPI repository
-
-Run the following command inside your local python environment:
-
-`pip install -i https://test.pypi.org/simple/ c12simulator-clients`
 
 #### From the PyPI repository
 
 Run the following command inside your local python environment:
 
-`pip install c12simulator-clients`
+`pip install  c12-callisto-clients`
 
 #### From the GitHub package
 In order to run the package the best policy is to create the conda environment where
@@ -41,7 +36,7 @@ is not the case see <a href="https://conda.io/projects/conda/en/latest/user-guid
 </li>
 <li> Then activate the conda environment with:
 
-`conda activate c12simulator-clients`
+`conda activate  c12-callisto-clients`
 </li>
 <li> And finally install the dependencies with 
 

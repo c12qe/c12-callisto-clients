@@ -1,11 +1,11 @@
 from typing import Union, List
 from qiskit.providers.provider import ProviderV1
 from qiskit.providers.exceptions import QiskitBackendNotFoundError
-from c12simulator_clients.api.client import Request
-from c12simulator_clients.qiskit_back.c12sim_backend import C12SimBackend
-from c12simulator_clients.qiskit_back.exceptions import C12SimApiError
-from c12simulator_clients.api.exceptions import ApiError
-from c12simulator_clients.user_configs import UserConfigs
+from c12_callisto_clients.api.client import Request
+from c12_callisto_clients.qiskit_back.c12sim_backend import C12SimBackend
+from c12_callisto_clients.qiskit_back.exceptions import C12SimApiError
+from c12_callisto_clients.api.exceptions import ApiError
+from c12_callisto_clients.user_configs import UserConfigs
 
 
 class C12SimProvider(ProviderV1):

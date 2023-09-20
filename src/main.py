@@ -2,8 +2,8 @@ from argparse import ArgumentParser, RawTextHelpFormatter
 import codecs
 from qiskit import QuantumCircuit
 
-from c12simulator_clients.user_configs import UserConfigs
-from c12simulator_clients.qiskit_back.c12sim_provider import C12SimProvider
+from c12_callisto_clients.user_configs import UserConfigs
+from c12_callisto_clients.qiskit.c12sim_provider import C12SimProvider
 
 
 def add_arguments():
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     user_configs: UserConfigs = None
 
     if args.config:
-        user_configs = UserConfigs.parse_file("c12simulator_clients/configs.json")
+        user_configs = UserConfigs.parse_file("c12_callisto_clients/configs.json")
         # Overwrite from the command line
         if args.verbose is not None:
             user_configs.verbose = args.verbose

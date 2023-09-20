@@ -5,8 +5,8 @@ with open("README.MD", "r") as fp:
 
 
 setup(
-    name="c12simulator_clients",
-    version="0.0.39",
+    name="c12_callisto_clients",
+    version="2.0.1",
     author="C12 Quantum Electronics",
     author_email="viktor@c12qe.com",
     description="Different clients for access to the C12 simulator",
@@ -38,11 +38,16 @@ setup(
     install_requires=["requests~=2.28", "qiskit~=0.41", "pydantic~=1.10"],
     python_requires=">=3.7",
     include_package_data=False,
-    package_dir={"c12simulator_clients": "src/c12simulator_clients"},
+    package_dir={"c12_callisto_clients": "src/c12_callisto_clients"},
     packages=[
-        "c12simulator_clients.api",
-        "c12simulator_clients.qiskit_back",
-        "c12simulator_clients",
+        "c12_callisto_clients.api",
+        "c12_callisto_clients.qiskit_back",
+        "c12_callisto_clients.qiskit",
+        "c12_callisto_clients.pytket",
+        "c12_callisto_clients.pytket.extensions",
+        "c12_callisto_clients.pytket.extensions.callisto",
+        "c12_callisto_clients.pytket.extensions.callisto.backends",
+        "c12_callisto_clients",
     ],
     license="MIT",
     options={"bdist_wheel": {"universal": True}},

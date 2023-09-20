@@ -1,4 +1,4 @@
-name: c12simulator_clients
+name: c12_callisto_clients
 channels:
   - defaults
 dependencies:

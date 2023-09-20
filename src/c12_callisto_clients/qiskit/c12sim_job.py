@@ -7,10 +7,10 @@ from qiskit.providers import JobV1, BackendV2
 from qiskit.quantum_info import Statevector, DensityMatrix
 from qiskit.providers.jobstatus import JobStatus, JOB_FINAL_STATES
 from qiskit.result.models import ExperimentResult, ExperimentResultData
-from c12simulator_clients.qiskit_back.exceptions import C12SimApiError, C12SimJobError
+from c12_callisto_clients.qiskit.exceptions import C12SimApiError, C12SimJobError
 
 
-from c12simulator_clients.api.exceptions import ApiError
+from c12_callisto_clients.api.exceptions import ApiError
 
 
 def get_qiskit_status(status: str) -> JobStatus:
@@ -230,6 +230,8 @@ class C12SimJob(JobV1):
                     f"Job finished with an error state. "
                     f"Use error_message() method to get more details."
                 )
+
+        self.refresh()
 
         self._result = Result(
             backend_name=self._backend,

@@ -7,11 +7,11 @@ from qiskit.transpiler import Target, InstructionProperties
 from qiskit.circuit import Measure, Parameter, QuantumCircuit
 from qiskit.circuit.library import RXGate, RYGate, RZGate, iSwapGate, CRXGate, CXGate
 
-from c12simulator_clients.api.client import Request
-from c12simulator_clients.api.exceptions import ApiError
-from c12simulator_clients.qiskit_back.exceptions import C12SimJobError
+from c12_callisto_clients.api.client import Request
+from c12_callisto_clients.api.exceptions import ApiError
+from c12_callisto_clients.qiskit.exceptions import C12SimJobError
 
-from c12simulator_clients.qiskit_back.c12sim_job import C12SimJob
+from c12_callisto_clients.qiskit.c12sim_job import C12SimJob
 
 gate_name_to_instruction_mapper = {
     "rx": RXGate(Parameter("theta")),

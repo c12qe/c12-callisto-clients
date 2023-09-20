@@ -2,10 +2,13 @@
   Basic URLs to the C12 sim APIs.
 """
 
-HOST_URL = "127.0.0.1"  # "57.128.19.83"  # "api.dev-simulator.c12qe.net"
-PORT = 9999  # Used for testing purposes
+import os
 
-API_BASE_URL = f"http://{HOST_URL}{'' if PORT is None else ':'+str(PORT)}/api"
+HOST_URL = os.getenv("C12_HOST_URL", "57.128.103.232")
+PORT = os.getenv("C12_PORT", "8080")
+PROTOCOL = os.getenv("C12_PROTOCOL", "http")
+
+API_BASE_URL = f"{PROTOCOL}://{HOST_URL}{'' if PORT is None else ':'+str(PORT)}/api"
 
 API_SIMULATOR_URL = API_BASE_URL + "/c12sim"
 API_HEALTH_URL = API_BASE_URL + "/health"
