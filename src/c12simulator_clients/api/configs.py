@@ -2,8 +2,8 @@
   Basic URLs to the C12 sim APIs.
 """
 
-HOST_URL = "127.0.0.1"  # "57.128.19.83"  # "api.dev-simulator.c12qe.net"
-PORT = 9999  # Used for testing purposes
+HOST_URL = "ovh-api.dev-simulator.c12qe.net"  # "57.128.19.83"  # "api.dev-simulator.c12qe.net"
+PORT = 8080  # Used for testing purposes
 
 API_BASE_URL = f"http://{HOST_URL}{'' if PORT is None else ':'+str(PORT)}/api"
 
