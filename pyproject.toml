@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "c12simulator-clients"
+name = "c12_callisto_clients"
 version = "0.0.1"
 description = ""
 authors = ["Viktor Radovic"]
@@ -9,6 +9,8 @@ python = "~3.10"
 qiskit = "^0.42.0"
 requests = "^2.28.2"
 pydantic = "^1.10.6"
+traitlets = "5.9.0"
+pytket = "^1.21.0"
 
 [tool.poetry.dev-dependencies]
 black = {extras = ["d"], version = "^23.1.0"}

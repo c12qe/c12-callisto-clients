@@ -17,7 +17,7 @@ elements of the C12 system.
 
 Run the following command inside your local python environment:
 
-`pip install  c12-callisto-clients`
+`pip install  c12_callisto_clients`
 
 #### From the GitHub package
 In order to run the package the best policy is to create the conda environment where
@@ -36,7 +36,7 @@ is not the case see <a href="https://conda.io/projects/conda/en/latest/user-guid
 </li>
 <li> Then activate the conda environment with:
 
-`conda activate  c12-callisto-clients`
+`conda activate  c12_callisto_clients`
 </li>
 <li> And finally install the dependencies with 
 
