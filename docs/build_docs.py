@@ -11,8 +11,8 @@ def build_doc(version, language, tag):
     os.environ["current_language"] = language
 
     subprocess.run("git checkout " + tag, shell=True)
-    subprocess.run("git checkout main -- conf.py", shell=True)
-    subprocess.run("git checkout main -- versions.yaml", shell=True)
+    subprocess.run("git checkout master -- conf.py", shell=True)
+    subprocess.run("git checkout master -- versions.yaml", shell=True)
 
     subprocess.run("make html", shell=True)
 
@@ -29,7 +29,7 @@ os.environ["build_all_docs"] = str(True)
 os.environ["pages_root"] = "https://those1990.github.io/SphinxExample"
 
 # manually the main branch build in the current supported languages
-build_doc("latest", "en", "main")
+build_doc("latest", "en", "master")
 move_dir("./_build/html/", "../pages/")
 
 # reading the yaml file
