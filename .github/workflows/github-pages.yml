@@ -1,0 +1,37 @@
+name: github-pages
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y libqhull-dev
+          pip install sphinx sphinx_rtd_theme myst_parser gdstk==0.9.42 gdsfactory "gplugins[klayout]" myst-parser
+
+      - uses: actions/checkout@v3
+      - name: build
+        run: |
+          # ... installation of all tools ...
+          # get all tags, and run a python script
+          # which you find below to build all documents
+          git fetch --tags
+          cd docs
+          mkdir _build
+          python3 build_docs.py
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          # Upload entire repository
+          path: './pages'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
