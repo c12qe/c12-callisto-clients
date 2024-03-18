@@ -33,7 +33,7 @@ build_doc("latest", "en", "master")
 move_dir("./_build/html/", "../pages/")
 
 # reading the yaml file
-with open("versions.yaml", "r") as yaml_file:
+with open("./versions.yaml", "r") as yaml_file:
     docs = yaml.safe_load(yaml_file)
 
 # and looping over all values to call our build with version, language and its tag
