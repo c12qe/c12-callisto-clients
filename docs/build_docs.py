@@ -29,8 +29,8 @@ os.environ["build_all_docs"] = str(True)
 os.environ["pages_root"] = "https://c12qe.github.io/c12-callisto-clients/"
 
 # manually the main branch build in the current supported languages
-# build_doc("latest", "en", "master")
-# move_dir("./_build/html/", "../pages/")
+build_doc("latest", "en", "test")
+move_dir("./_build/html/", "../pages/")
 
 # reading the yaml file
 with open("./versions.yaml", "r") as yaml_file:
