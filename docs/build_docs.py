@@ -26,7 +26,7 @@ def move_dir(src, dst):
 
 # to separate a single local build from all builds we have a flag, see conf.py
 os.environ["build_all_docs"] = str(True)
-os.environ["pages_root"] = "https://those1990.github.io/SphinxExample"
+os.environ["pages_root"] = "https://c12qe.github.io/c12-callisto-clients/"
 
 # manually the main branch build in the current supported languages
 build_doc("latest", "en", "master")

@@ -33,7 +33,7 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-            publish_branch: dc_paths
+            publish_branch: docs
             github_token: ${{ secrets.GITHUB_TOKEN }}
             publish_dir: './pages'
             force_orphan: true
