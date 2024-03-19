@@ -31,7 +31,9 @@ jobs:
           # Upload entire repository
           path: './pages'
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_branch: dc_paths
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: './pages'
+            force_orphan: true
