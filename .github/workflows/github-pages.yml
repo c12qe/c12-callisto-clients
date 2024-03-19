@@ -11,7 +11,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get install -y libqhull-dev
-          pip install sphinx sphinx_rtd_theme myst_parser gdstk==0.9.42 gdsfactory "gplugins[klayout]" myst-parser
+          pip install sphinx sphinx_rtd_theme myst_parser gdstk==0.9.42 gdsfactory "gplugins[klayout]" myst-parser nbsphinx
 
       - uses: actions/checkout@v3
       - name: build
