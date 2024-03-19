@@ -7,9 +7,16 @@ Welcome to c12-callisto-clients's documentation!
 ================================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
 
+   0. README.ipynb
+   1. Short_introduction_to_Qiskit.ipynb
+   2. Using_the_C12_simulator.ipynb
+   3. Working_with_jobs.ipynb
+   4. Using API.ipynb
+   5. Getting mid circuit states.ipynb
+   6. Physical parameters of the system.ipynb
 
 
 Indices and tables
