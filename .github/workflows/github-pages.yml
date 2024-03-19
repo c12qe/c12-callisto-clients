@@ -26,16 +26,14 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
-          name: pages
           path: './pages'
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            publish_dir: './pages'
+#      - name: Deploy to GitHub Pages
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#            github_token: ${{ secrets.GITHUB_TOKEN }}
+#            publish_dir: './pages'
 
   deploy:
       runs-on: ubuntu-latest
