@@ -13,7 +13,7 @@ import sys
 
 
 default_path = os.path.dirname(__file__)
-sys.path.insert(0, os.path.abspath(default_path + "/../../src"))
+sys.path.insert(0, os.path.abspath(default_path + "/../src"))
 
 project = "c12-callisto-clients"
 copyright = "2024, C12 Quantum Electronics"
