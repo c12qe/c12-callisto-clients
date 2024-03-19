@@ -2,8 +2,7 @@
   tag: 'test6'
   languages:
     - "en"
-#"2.0":
-#  tag: '2.0'
-#  languages:
-#    - "de"
-#    - "en"
+"test7":
+  tag: 'test7'
+  languages:
+    - "en"
