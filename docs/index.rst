@@ -21,7 +21,7 @@ We are so happy and proud to let you experiment with a software that imitates ne
    include_readme.rst
    0. README.ipynb
    1. Short_introduction_to_Qiskit.ipynb
-   2. Using_the_C12_simulator.ipynb
+   2. Using_the_C12_emulator.ipynb
    3. Working_with_jobs.ipynb
    4. Using API.ipynb
    5. Getting mid circuit states.ipynb
