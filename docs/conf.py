@@ -71,6 +71,7 @@ html_context = {
     "languages": [["en", "link to en"]],
 }
 
+
 #
 # current_language = os.environ.get("current_language")
 # current_version = os.environ.get("current_version")
