@@ -1,8 +1,4 @@
-"test6":
-  tag: 'test6'
-  languages:
-    - "en"
-"test7":
-  tag: 'test7'
+"furo_test":
+  tag: 'furo_test'
   languages:
     - "en"
