@@ -1,12 +1,3 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# For the full list of built-in configuration values, see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
-
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-
-
 import os
 import yaml
 import sys
@@ -15,24 +6,20 @@ import sys
 default_path = os.path.dirname(__file__)
 sys.path.insert(0, os.path.abspath(default_path + "/../src"))
 
+
+# Main project configurations
 project = "CALLISTO"
 copyright = "2024, C12 Quantum Electronics"
 author = "C12 Quantum Electronics"
 release = "2.01"
 
-# -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = ["sphinx.ext.autodoc", "myst_parser", "nbsphinx"]
-
-
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
-# -- Options for HTML output -------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
-
+# HTML theme options
 html_theme = "furo"
 html_static_path = ["_static"]
 html_favicon = "_static/favicon.png"
@@ -60,20 +47,13 @@ html_css_files = [
     "css/custom.css",
 ]
 
-# html_theme_options = {
-#     "display_version": True,
-# }
 
-# html_context = {
-#     "current_version": "0.0.6",
-#     "versions": [["0.0.6", "link"], ["test", "link to test"]],
-#     "current_language": "en",
-#     "languages": [["en", "link to en"]],
-# }
+# Versioning part
 
-
+# We get the version and language from the environment variables
 current_language = os.environ.get("current_language")
 current_version = os.environ.get("current_version")
+
 
 html_context = {
     "current_language": current_language,
@@ -86,7 +66,6 @@ pages_root = os.environ.get("pages_root", "")
 
 if current_version == "latest":
     html_context["languages"].append(["en", pages_root])
-    html_context["languages"].append(["de", pages_root + "/de"])
 
 if current_language == "en":
     html_context["versions"].append(["latest", pages_root])
