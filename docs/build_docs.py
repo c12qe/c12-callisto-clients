@@ -7,15 +7,15 @@ def build_doc(version, language, tag):
     os.environ["current_version"] = version
     os.environ["current_language"] = language
 
-    subprocess.run(f"git checkout {tag}")
-    subprocess.run("git checkout docs -- conf.py")
-    subprocess.run("git checkout docs -- versions.yaml")
+    subprocess.run(f"git checkout {tag}", shell=True)
+    subprocess.run("git checkout docs -- conf.py", shell=True)
+    subprocess.run("git checkout docs -- versions.yaml", shell=True)
     subprocess.run("make html")
 
 
 def move_dir(src, dst):
     subprocess.run(["mkdir", "-p", dst])
-    subprocess.run("mv " + src + "* " + dst)
+    subprocess.run("mv " + src + "* " + dst, shell=True)
 
 
 os.environ["pages_root"] = "https://c12qe.github.io/c12-callisto-clients/"
