@@ -7,11 +7,16 @@ default_path = os.path.dirname(__file__)
 sys.path.insert(0, os.path.abspath(default_path + "/../src"))
 
 
+# We get the version and language from the environment variables
+current_language = os.environ.get("current_language")
+current_version = os.environ.get("current_version")
+
+
 # Main project configurations
 project = "CALLISTO"
 copyright = "2024, C12 Quantum Electronics"
 author = "C12 Quantum Electronics"
-release = "2.01"
+release = f"{current_version}"
 
 
 extensions = ["sphinx.ext.autodoc", "myst_parser", "nbsphinx"]
@@ -24,7 +29,7 @@ html_theme = "furo"
 html_static_path = ["_static"]
 html_favicon = "_static/favicon.png"
 html_theme_options = {
-    "announcement": "We're pleased to announce that <bold>CALLISTO 2.01</bold> is now released!",
+    f"announcement": f"We're pleased to announce that <bold>CALLISTO {current_version}</bold> is now released!",
     "light_css_variables": {
         "color-brand-primary": "#3A3938",
         "color-brand-content": "#D6A018",
@@ -49,10 +54,6 @@ html_css_files = [
 
 
 # Versioning part
-
-# We get the version and language from the environment variables
-current_language = os.environ.get("current_language")
-current_version = os.environ.get("current_version")
 
 html_context = {
     "current_language": current_language,
