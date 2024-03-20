@@ -75,12 +75,12 @@ html_css_files = [
 current_language = os.environ.get("current_language")
 current_version = os.environ.get("current_version")
 
-# html_context = {
-#     "current_language": current_language,
-#     "languages": [],
-#     "current_version": current_version,
-#     "versions": [],
-# }
+html_context = {
+    "current_language": current_language,
+    "languages": [],
+    "current_version": current_version,
+    "versions": [],
+}
 pages_root = os.environ.get("pages_root", "")
 
 
