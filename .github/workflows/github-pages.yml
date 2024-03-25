@@ -12,7 +12,7 @@ jobs:
         run: |
           sudo apt-get install -y libqhull-dev
           sudo apt-get install pandoc
-          pip install sphinx sphinx_rtd_theme myst_parser myst-parser nbsphinx furo
+          pip install sphinx myst_parser myst-parser nbsphinx furo
 
       - uses: actions/checkout@v3
       - name: build
