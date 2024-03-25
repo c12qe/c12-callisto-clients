@@ -21,7 +21,7 @@ def move_dir(src, dst):
 os.environ["pages_root"] = "https://c12qe.github.io/c12-callisto-clients/"
 
 
-build_doc("latest", "en", "furo_test")
+build_doc("latest", "en", "master")
 move_dir("./_build/html/", "../pages/")
 
 
