@@ -1,4 +1,5 @@
 """ Pytket Backend for C12 Callisto quantum emulator """
+
 # pylint: disable = no-name-in-module
 # pylint: disable = import-error
 from typing import Optional, List, Union, Sequence, Dict

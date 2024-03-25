@@ -36,3 +36,4 @@ build/*
 dist/*
 c12simulator_clients.egg-info/*
 c12_callisto_clients.egg-info/*
+docs/_build/*
