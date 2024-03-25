@@ -16,7 +16,7 @@ current_version = os.environ.get("current_version")
 project = "CALLISTO"
 copyright = "2024, C12 Quantum Electronics"
 author = "C12 Quantum Electronics"
-release = f"{current_version}"
+release = f"{current_version if current_version != "latest" else "0.0.6" }"
 
 
 extensions = ["sphinx.ext.autodoc", "myst_parser", "nbsphinx"]
