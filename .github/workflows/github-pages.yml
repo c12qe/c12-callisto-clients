@@ -12,7 +12,7 @@ jobs:
         run: |
           sudo apt-get install -y libqhull-dev
           sudo apt-get install pandoc
-          pip install sphinx_rtd_theme sphinx myst_parser myst-parser nbsphinx furo numpy qiskit==0.42.0 requests pydantic pytket setuptools
+          pip install sphinx_rtd_theme sphinx myst_parser myst-parser nbsphinx furo setuptools numpy qiskit==0.42.0 requests pydantic pytket 
 
       - uses: actions/checkout@v3
       - name: build
