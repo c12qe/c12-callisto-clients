@@ -8,9 +8,13 @@ Subpackages
    :maxdepth: 4
 
    c12_callisto_clients.api
+
    c12_callisto_clients.pytket
+
    c12_callisto_clients.qiskit
+
    c12_callisto_clients.qiskit_back
+
 
 Submodules
 ----------
