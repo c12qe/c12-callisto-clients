@@ -16,7 +16,7 @@ current_version = os.environ.get("current_version")
 project = "CALLISTO"
 copyright = "2024, C12 Quantum Electronics"
 author = "C12 Quantum Electronics"
-release = f"{current_version if current_version != "latest" else "0.0.6" }"
+release = f"{current_version if current_version != 'latest' else '0.0.6' }"
 
 
 extensions = ["sphinx.ext.autodoc", "myst_parser", "nbsphinx"]
@@ -24,14 +24,12 @@ templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
-
-
 # HTML theme options
 html_theme = "furo"
 html_static_path = ["_static"]
 html_favicon = "_static/favicon.png"
 html_theme_options = {
-    f"announcement": f"We're pleased to announce that <bold>CALLISTO {current_version if current_version != "latest" else "0.0.6" }</bold> is now released!",
+    f"announcement": f"We're pleased to announce that <bold>CALLISTO {current_version if current_version != 'latest' else '0.0.6' }</bold> is now released!",
     "light_css_variables": {
         "color-brand-primary": "#3A3938",
         "color-brand-content": "#D6A018",
@@ -83,6 +81,8 @@ if docs is not None and docs.items() is not None:
             html_context["languages"].append(
                 [language, pages_root + "/" + current_version + "/" + language]
             )
-    
+
     for version, details in docs.items():
-        html_context["versions"].append([version, pages_root + "/" + version + "/" + current_language])
+        html_context["versions"].append(
+            [version, pages_root + "/" + version + "/" + current_language]
+        )
