@@ -15,11 +15,11 @@ from c12_callisto_clients.api.exceptions import ApiError
 
 def get_qiskit_status(status: str) -> JobStatus:
     """
-      Function to get a qiskit's JobStatus status of a job.
+    Function to get a qiskit's JobStatus status of a job.
+    
     :param status:  String with job's status description.
     :return: JobStatus
-
-    :raise: C12SimJobError if unknown status is given
+    :raises C12SimJobError: if unknown status is given
     """
 
     status = status.upper().strip()
@@ -67,17 +67,18 @@ class C12SimJob(JobV1):
 
     def submit(self):
         """
-          Not implemented methos as to submit a job we are using run() method.
+        Not implemented methods as to submit a job we are using run() method.
+        
         :return:
-
-        :raise NotImplementedError
+        :raise NotImplementedError:
         """
         raise NotImplementedError("submit() is not supported. Please use run to submit a job.")
 
     def shots(self) -> int:
-        """Return the number of shots.
+        """
+        Return the number of shots.
 
-        Returns: number of shots.
+        :return: number of shots
         """
         return self.metadata["metadata"]["shots"] if "shots" in self.metadata["metadata"] else 0
 
@@ -98,8 +99,10 @@ class C12SimJob(JobV1):
         return np.array(matrix)
 
     def refresh(self) -> None:
-        """Obtain the latest job information from the server.
+        """
+        Obtain the latest job information from the server.
         Function has a side effect of changing private fields.
+        
         :return: None
         """
 
@@ -162,6 +165,7 @@ class C12SimJob(JobV1):
     def error_message(self) -> Optional[str]:
         """
         Provide details about the reason of a job failure.
+        
         :return: An error report if the job failed or None
         """
 
@@ -179,6 +183,7 @@ class C12SimJob(JobV1):
     def _parse_result_data(self) -> List[ExperimentResult]:
         """
         Parse result dictionary.
+        
         :return: Result object or none
         """
 
@@ -254,6 +259,7 @@ class C12SimJob(JobV1):
     def status(self) -> JobStatus:
         """
         Get the latest job status of a current job instance.
+        
         :return: The status of the job.
         """
         if self._status in JOB_FINAL_STATES:
@@ -273,6 +279,7 @@ class C12SimJob(JobV1):
     def get_qasm(self, transpiled: bool = False) -> Optional[str]:
         """
         Method returns the qasm string for a given job.
+        
         :return: qasm str or None
         """
         if self.metadata is None or "qasm" not in self.metadata["metadata"]:
@@ -290,6 +297,7 @@ class C12SimJob(JobV1):
     def get_circuit(self, transpiled: bool = False) -> Optional[QuantumCircuit]:
         """
         Method return QuantumCircuit object for a given job.
+        
         :return: QuantumCircuit or None
         """
         qasm_str = self.get_qasm(transpiled=transpiled)
@@ -301,6 +309,7 @@ class C12SimJob(JobV1):
     def get_mid_statevector(self, barrier: int) -> Optional[Statevector]:
         """
         Function to get the mid-circuit statevector (if any).
+        
         :param barrier: ordinal number of barrier
         :return: Statevector instance
         """
@@ -321,6 +330,7 @@ class C12SimJob(JobV1):
     def get_mid_density_matrix(self, barrier: int) -> Optional[DensityMatrix]:
         """
         Function to get the mid-circuit density matrix (if any).
+        
         :param barrier: ordinal number of barrier
         :return: DansityMatrix instance
         """
