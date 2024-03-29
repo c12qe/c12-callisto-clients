@@ -1,14 +1,9 @@
 # c12-callisto-clients
 
-`c12-callisto-clients` is a Python package with a tools that enables a user to communicate with the 
-C12's Callisto simulator whose purpose
-is to simulate the operations on the real C12 quantum computer. 
+`c12-callisto-clients` is a Python package with a tools that enables a user to communicate with 
+C12's Callisto emulator, whose purpose is to emulate operations on the C12’s quantum computer hardware.
 
-C12’s quantum computer is based on optimized
-spin qubits. The spin qubit is realized from electrons trapped in a double quantum dot suspended on carbon 
-nano tubes (CNTs) embedded in a silicon nano circuit and microwave cavity. C12’s spin qubits have 
-high fidelity, scalability and connectivity because of the properties of the materials used to build the basics 
-elements of the C12 system.
+C12’s quantum computer is based on optimized spin qubits. The spin qubit is realized from electrons trapped in a double quantum dot suspended on a carbon nanotube embedded in a silicon nanofabricated circuit. C12’s spin qubits have high fidelity, scalability and connectivity because of the properties of the materials used.
 
 ## Installing
 
