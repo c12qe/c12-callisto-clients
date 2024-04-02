@@ -50,7 +50,6 @@ jobs:
       - name: build for upload to pypi
         run: |
           python3 setup.py sdist bdist_wheel
-          python3 -m twine upload dist/*
         env:
           SOURCE_TAG: ${{ steps.tag_name.outputs.SOURCE_TAG }}
 
