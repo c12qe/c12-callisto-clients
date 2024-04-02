@@ -1,12 +1,19 @@
+import os
 from setuptools import setup
 
-with open("README.md", "r") as fp:
-    README = fp.read()
+try:
+    with open("README.md", "r") as fp:
+        README = fp.read()
+except FileNotFoundError:
+    README = ""
+
+# Get version from the environment variable
+version = os.environ.get("SOURCE_TAG", "2.0.1")
 
 
 setup(
     name="c12_callisto_clients",
-    version="2.0.1",
+    version=f"{version}",
     author="C12 Quantum Electronics",
     author_email="viktor@c12qe.com",
     description="Different clients for access to the C12 simulator",

@@ -1,7 +1,9 @@
 name: publish-to-pypi
 
-on: [push]
-
+on:
+  push:
+    tags:
+      - '*'
 jobs:
 
   build:
@@ -39,6 +41,12 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install setuptools wheel twine
+          
+
+      - name: Get tag name
+        id: tag_name
+        run: |
+            echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
 
       - name: Build and Upload to TestPyPI
         run: |
@@ -48,5 +56,6 @@ jobs:
           TWINE_USERNAME: ${{secrets.PYPI_USERNAME}}
           TWINE_PASSWORD: ${{secrets.PYPI_TOKEN}}
           TWINE_REPOSITORY: testpypi
+          SOURCE_TAG: ${{ steps.tag_name.outputs.SOURCE_TAG }}
 
 
