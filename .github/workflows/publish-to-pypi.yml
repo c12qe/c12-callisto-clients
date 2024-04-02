@@ -4,13 +4,19 @@ on:
   push:
     tags:
       - '*'
+      -
 jobs:
-
-  build:
+  publish:
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
+
+      - name: Get tag name
+        id: tag_name
+        run: |
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
 
       - name: Set up python
         id: setup-python
@@ -36,25 +42,23 @@ jobs:
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
 
-
       - name: Install additional dependencies
         run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install setuptools wheel twine
-          
 
-      - name: Get tag name
-        id: tag_name
-        run: |
-            echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
-
-      - name: Build and Upload to TestPyPI
+      - name: build for upload to pypi
         run: |
           python3 setup.py sdist bdist_wheel
           python3 -m twine upload dist/*
         env:
+          SOURCE_TAG: ${{ steps.tag_name.outputs.SOURCE_TAG }}
+
+      - name: Upload to pypi
+        run: |
+          python3 -m twine upload dist/*
+        env:
           TWINE_USERNAME: ${{secrets.PYPI_USERNAME}}
           TWINE_PASSWORD: ${{secrets.PYPI_TOKEN}}
-          SOURCE_TAG: ${{ steps.tag_name.outputs.SOURCE_TAG }}
 
 
