@@ -1,8 +1,8 @@
 name: github-pages
 
-on: [push, pull_request]
-#  push:
-#    branches: [ master ]
+on:
+  push:
+    branches: [ master ]
 
 jobs:
   build:
@@ -49,6 +49,7 @@ jobs:
           cd docs
           mkdir _build
           python3 build_docs.py
+
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
