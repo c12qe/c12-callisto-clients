@@ -15,7 +15,7 @@ from c12_callisto_clients.api.exceptions import ApiError
 
 def get_qiskit_status(status: str) -> JobStatus:
     """
-    Function to get a qiskit's JobStatus status of a job.
+    Function to get Qiskit's JobStatus status of a job.
     
     :param status:  String with job's status description.
     :return: JobStatus
