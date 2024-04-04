@@ -45,6 +45,7 @@ jobs:
           cd docs
           mkdir _build
           pip freeze
+          source .venv/bin/activate
           python3 build_docs.py
 
       - name: Setup Pages
