@@ -11,6 +11,7 @@ PROTOCOL = os.getenv("C12_PROTOCOL", "http")
 
 API_BASE_URL = f"{PROTOCOL}://{HOST_URL}{'' if PORT is None else ':'+str(PORT)}/api"
 
+
 API_SIMULATOR_URL = API_BASE_URL + "/c12sim"
 API_HEALTH_URL = API_BASE_URL + "/health"
 

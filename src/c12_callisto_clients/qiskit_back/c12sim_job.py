@@ -16,7 +16,7 @@ from c12_callisto_clients.api.exceptions import ApiError
 def get_qiskit_status(status: str) -> JobStatus:
     """
     Function to get Qiskit's JobStatus status of a job.
-    
+
     :param status:  String with job's status description.
     :return: JobStatus
     :raises C12SimJobError: if unknown status is given
@@ -68,7 +68,7 @@ class C12SimJob(JobV1):
     def submit(self):
         """
         Not implemented methods as to submit a job we are using run() method.
-        
+
         :return:
         :raises NotImplementedError:
         """
@@ -102,7 +102,7 @@ class C12SimJob(JobV1):
         """
         Obtain the latest job information from the server.
         Function has a side effect of changing private fields.
-        
+
         :return: None
         """
 
@@ -151,9 +151,7 @@ class C12SimJob(JobV1):
                 wait=wait,
             )
         except ApiError as err:
-            raise C12SimApiError(
-                "Unexpected error happened during the accessing the remote server"
-            ) from err
+            raise C12SimApiError("Unexpected error happened during the accessing the remote server") from err
         except TimeoutError as err2:
             raise C12SimJobError("Timeout occurred while waiting for job execution") from err2
 
@@ -165,7 +163,7 @@ class C12SimJob(JobV1):
     def error_message(self) -> Optional[str]:
         """
         Provide details about the reason of a job failure.
-        
+
         :return: An error report if the job failed or None
         """
 
@@ -183,7 +181,7 @@ class C12SimJob(JobV1):
     def _parse_result_data(self) -> List[ExperimentResult]:
         """
         Parse result dictionary.
-        
+
         :return: Result object or none
         """
 
@@ -225,9 +223,7 @@ class C12SimJob(JobV1):
     def result(self, timeout: Optional[float] = None, wait: float = 5):
         if not self._wait_for_completion(timeout, wait, required_states=(JobStatus.DONE,)):
             if self._status is JobStatus.CANCELLED:
-                raise C12SimJobError(
-                    f"Unable to retrieve result for job {self._job_id}. Job was cancelled"
-                )
+                raise C12SimJobError(f"Unable to retrieve result for job {self._job_id}. Job was cancelled")
 
             if self._status is JobStatus.ERROR:
                 raise C12SimJobError(
@@ -257,7 +253,7 @@ class C12SimJob(JobV1):
     def status(self) -> JobStatus:
         """
         Get the latest job status of a current job instance.
-        
+
         :return: The status of the job.
         """
         if self._status in JOB_FINAL_STATES:
@@ -266,9 +262,7 @@ class C12SimJob(JobV1):
         try:
             status = self._backend.request.get_job_status(self._job_id)
         except ApiError as err:
-            raise C12SimApiError(
-                "Unexpected error happened during the accessing the remote server"
-            ) from err
+            raise C12SimApiError("Unexpected error happened during the accessing the remote server") from err
 
         self._status = get_qiskit_status(status)
 
@@ -277,7 +271,7 @@ class C12SimJob(JobV1):
     def get_qasm(self, transpiled: bool = False) -> Optional[str]:
         """
         Method returns the qasm string for a given job.
-        
+
         :return: qasm str or None
         """
         if self.metadata is None or "qasm" not in self.metadata["metadata"]:
@@ -286,16 +280,12 @@ class C12SimJob(JobV1):
             return self.metadata["metadata"]["qasm"]
         else:
             # Added for some backward compatibility
-            return (
-                self.metadata["metadata"]["qasm_orig"]
-                if "qasm_orig" in self.metadata["metadata"]
-                else None
-            )
+            return self.metadata["metadata"]["qasm_orig"] if "qasm_orig" in self.metadata["metadata"] else None
 
     def get_circuit(self, transpiled: bool = False) -> Optional[QuantumCircuit]:
         """
         Method return QuantumCircuit object for a given job.
-        
+
         :return: QuantumCircuit or None
         """
         qasm_str = self.get_qasm(transpiled=transpiled)
@@ -307,7 +297,7 @@ class C12SimJob(JobV1):
     def get_mid_statevector(self, barrier: int) -> Optional[Statevector]:
         """
         Function to get the mid-circuit statevector (if any).
-        
+
         :param barrier: ordinal number of barrier
         :return: Statevector instance
         """
@@ -328,7 +318,7 @@ class C12SimJob(JobV1):
     def get_mid_density_matrix(self, barrier: int) -> Optional[DensityMatrix]:
         """
         Function to get the mid-circuit density matrix (if any).
-        
+
         :param barrier: ordinal number of barrier
         :return: DansityMatrix instance
         """

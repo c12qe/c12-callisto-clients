@@ -11,6 +11,7 @@ from c12_callisto_clients.api.client import Request
 from c12_callisto_clients.api.exceptions import ApiError
 from c12_callisto_clients.qiskit_back.exceptions import C12SimJobError
 
+
 from c12_callisto_clients.qiskit_back.c12sim_job import C12SimJob
 
 gate_name_to_instruction_mapper = {
@@ -122,7 +123,7 @@ class C12SimBackend(BackendV2):
     def jobs(self, limit: int = 50, offset: int = 0) -> List[C12SimJob]:
         """
         Returns all the jobs associated to the user for the backend.
-        
+
         :param limit: number of records to be returned
         :param offset: offset from start
         :return: list of C12SimJob
@@ -149,7 +150,7 @@ class C12SimBackend(BackendV2):
     def get_job(self, job_uuid: str) -> Optional[C12SimJob]:
         """
         Get the job with a given uuid.
-        
+
         :param job_uuid:  uuid of a job
         :return:  None or an instance of C12SimJob class
         """
@@ -176,9 +177,7 @@ class C12SimBackend(BackendV2):
 
     @property
     def dtm(self) -> float:
-        raise NotImplementedError(
-            f"System time resolution of output signals is not supported by {self._backend_name}."
-        )
+        raise NotImplementedError(f"System time resolution of output signals is not supported by {self._backend_name}.")
 
     @property
     def meas_map(self) -> List[List[int]]:
@@ -208,9 +207,7 @@ class C12SimBackend(BackendV2):
 
                 ini_circuit = tmp_qc.copy_empty_like()
                 ini_circuit.append(instruction, qargs, cargs)
-                ini_circuit = (
-                    ini_circuit.decompose()
-                )  # It has to be done for the OpenQASM 2.0 it will fail otherwise
+                ini_circuit = ini_circuit.decompose()  # It has to be done for the OpenQASM 2.0 it will fail otherwise
 
                 # Pass over the ini_circuit and append it
                 # The best way would be to append two circuits

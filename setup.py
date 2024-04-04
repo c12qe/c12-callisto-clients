@@ -7,6 +7,7 @@ try:
 except FileNotFoundError:
     README = ""
 
+
 # Get version from the environment variable
 version = os.environ.get("SOURCE_TAG", "2.0.1")
 
