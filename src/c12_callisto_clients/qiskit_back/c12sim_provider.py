@@ -12,7 +12,6 @@ class C12SimProvider(ProviderV1):
     """
     Class that represent a Provider class for C12 simulator.
     It gives (provides) access to C12SIM backend.
-
     """
 
     _request: Request = None
@@ -33,9 +32,7 @@ class C12SimProvider(ProviderV1):
         :param name: string of backend name
         :param kwargs: optional args
         :return: list of backend objects
-
-        :raise C12SimApiError if an error occurred during the API request
-
+        :raises C12SimApiError: if an error occurred during the API request
         """
 
         try:
@@ -57,9 +54,8 @@ class C12SimProvider(ProviderV1):
         :param name: string representing the name of a backend
         :param kwargs:
         :return: C12SIMBackend instance
-
-        :raise QiskitBackendNotFoundError if there is no backend available
-               C12SimApiError if there is a problem in communication with remote server
+        :raises QiskitBackendNotFoundError: if there is no backend available
+        :raises C12SimApiError: if there is a problem in communication with remote server
         """
 
         if name is None:

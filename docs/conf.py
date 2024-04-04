@@ -4,7 +4,7 @@ import sys
 
 
 default_path = os.path.dirname(__file__)
-sys.path.insert(0, os.path.abspath(default_path + "../../src"))
+sys.path.insert(0, os.path.abspath(default_path + "../src"))
 
 
 # We get the version and language from the environment variables

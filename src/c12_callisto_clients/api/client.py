@@ -20,8 +20,8 @@ class Request:
 
     def __init__(self, auth_token: str, verbose: bool = False):
         """
-        :param auth_token:  authorisation token of a user that is used for access
-                to the C12 APIs
+        :param auth_token: authorisation token of a user that is used for access
+                           to the C12 APIs
         :param verbose: if detailed printing is active
         """
         self._auth_token = auth_token
@@ -34,6 +34,7 @@ class Request:
     def auth_token(self):
         """
         Getter for the authentication token.
+
         :return: user authentication token
         """
         return self._auth_token
@@ -52,12 +53,10 @@ class Request:
         :param params: query parameters of the request (dictionary)
         :param header: additional header options
         :return: object (json)
-
-        :raise ValueError - if some parameters ar in the work fmt
-               HTTPError - if some Error occurred during the execution of the api request
-               PermissionError - if the user do not have enough permission for the execution of
-                        the API
-
+        :raises ValueError: if some parameters are in the work fmt
+        :raises HTTPError: if some Error occurred during the execution of the api request
+        :raises PermissionError: if the user do not have enough permission for the execution of
+                                 the API
         """
         if header is None:
             headers = self._auth_header
@@ -116,11 +115,9 @@ class Request:
                 If no value is specified the one from the DB will be used.
         :param timeout: seconds to wait for a job (if None wait forever)
         :param wait: seconds between queries
-
-        :return:  json with job information (dict)
-
-        :raise ApiError if error in API communication occurred
-               TimeoutError if timeout is exceeded
+        :return: json with job information (dict)
+        :raises ApiError: if error in API communication occurred
+        :raises TimeoutError: if timeout is exceeded
         """
         params = {"job_uuid": job_uuid, "output_data": output_data}
 
@@ -160,15 +157,14 @@ class Request:
         Call the API to start the job.
 
         :param qasm_str: QASM string with transpiled quantum circuit
-        :param shots:  Number of shots for the simulation
+        :param shots: Number of shots for the simulation
         :param result: what is desired output (statevector, counts, density_matrix)
         :param backend_name: the name of the backend to run on
         :param ini_noise: specify if we want to apply a noise to the initialisation of the circuit
         :param ini: initial state of the circuit as a string (label) or array of complex numbers
         :param physical_params: stringify json with physical parameters
         :return: tuple str (job uuid) and transpiled qasm str
-
-        :raise: ApiError if unexpected API error happened
+        :raises ApiError: if unexpected API error happened
         """
         params = {
             "qasm_str": qasm_str,
@@ -200,8 +196,9 @@ class Request:
     def get_maxjobs(self) -> int:
         """
         Call to the API to get the maximum number of jobs per user.
+
         :return: number of jobs (int)
-        :raise ApiError if unexpected API error happened
+        :raises ApiError: if unexpected API error happened
         """
         data = self.do_request(API_MAXJOBS_URL, method="get")
         if "maxjobs" not in data:
@@ -212,9 +209,9 @@ class Request:
     def get_params(self) -> dict:
         """
         Call to the API to get the physical parameters of the C12 system.
-        :return: list of parameters
 
-        :raise: ApiError if unexpected API error has happened
+        :return: list of parameters
+        :raises ApiError: if unexpected API error has happened
         """
 
         data = self.do_request(API_PARAMS_URL, method="get")
@@ -227,8 +224,9 @@ class Request:
     def get_backends(self) -> list:
         """
         Call to the API to get all available backends.
+
         :return: list of available backends, empty if none available
-        :raise ApiError if unexpected API error happened
+        :raises ApiError: if unexpected API error happened
         """
         data = self.do_request(API_BACKENDS_URL, method="get")
 
@@ -239,6 +237,7 @@ class Request:
     def get_job_status(self, job_uuid: str) -> str:
         """
         Get the status of a running job.
+
         :param job_uuid: job uuid
         :return: status of a job
         """
@@ -253,6 +252,7 @@ class Request:
     def get_job(self, job_uuid: str) -> dict:
         """
         Get a specific job with a given uuid.
+
         :param job_uuid: job_id
         :return: dict of job data
         """
@@ -268,6 +268,7 @@ class Request:
         """
         Get a list of a running job for a specific user, with a support
         for paging.
+
         :param limit:  number of records
         :param offset:  offset
         :return:  list of running jobs

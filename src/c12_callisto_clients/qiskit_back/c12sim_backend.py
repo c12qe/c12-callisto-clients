@@ -11,6 +11,7 @@ from c12_callisto_clients.api.client import Request
 from c12_callisto_clients.api.exceptions import ApiError
 from c12_callisto_clients.qiskit_back.exceptions import C12SimJobError
 
+
 from c12_callisto_clients.qiskit_back.c12sim_job import C12SimJob
 
 gate_name_to_instruction_mapper = {
@@ -31,7 +32,6 @@ InstOpsType = NewType(
 class C12SimBackend(BackendV2):
     """
     C12 simulator backend wrapper for Qiskit's BackendV2 class.
-
     """
 
     @classmethod
@@ -48,15 +48,13 @@ class C12SimBackend(BackendV2):
         **fields,
     ):
         """
-        Constructor for C12SIM backend. Checking authentication and
-        a backend name.
+        Constructor for C12SIM backend. Checking authentication and a backend name.
 
         :type provider: Backward Provider object that is used to provide access to the backend
-        :param name:name of a backend
+        :param name: name of a backend
         :param request: Request API object for making the api requests to the C12 sim backend
         :param properties: Dictionary of the backend properties
         :param fields: additional fields to set the backend as number of shots
-
         """
         super().__init__(
             provider=provider,
@@ -76,14 +74,13 @@ class C12SimBackend(BackendV2):
     @property
     def target(self):
         """
-            The Target class is used to represent a backend or hardware target.
-            It provides information about the capabilities and properties of a quantum device or
-            simulator, such as the number of qubits, available gates, and measurement options.
-            This information can be used to configure and validate quantum circuits before they are
-            executed on the target backend.
+        The Target class is used to represent a backend or hardware target.
+        It provides information about the capabilities and properties of a quantum device or
+        simulator, such as the number of qubits, available gates, and measurement options.
+        This information can be used to configure and validate quantum circuits before they are
+        executed on the target backend.
 
-            See: https://qiskit.org/documentation/stubs/qiskit.transpiler.Target.html
-
+        See: https://qiskit.org/documentation/stubs/qiskit.transpiler.Target.html
 
         :return: Target object
         """
@@ -126,6 +123,7 @@ class C12SimBackend(BackendV2):
     def jobs(self, limit: int = 50, offset: int = 0) -> List[C12SimJob]:
         """
         Returns all the jobs associated to the user for the backend.
+
         :param limit: number of records to be returned
         :param offset: offset from start
         :return: list of C12SimJob
@@ -152,6 +150,7 @@ class C12SimBackend(BackendV2):
     def get_job(self, job_uuid: str) -> Optional[C12SimJob]:
         """
         Get the job with a given uuid.
+
         :param job_uuid:  uuid of a job
         :return:  None or an instance of C12SimJob class
         """
@@ -227,15 +226,14 @@ class C12SimBackend(BackendV2):
 
     def run(self, run_input, **options) -> Union[C12SimJob, List[C12SimJob]]:
         """
-            This method returns a :class:`~qiskit.providers.Job` object that runs circuits.
+        This method returns a :class:`~qiskit.providers.Job` object that runs circuits.
 
         :param run_input: (QuantumCircuit) or list: object to run on the backend.
         :param options: Any kwarg options to pass to the backend for running the
                         config.
         :return: C12SimJob instance
-
-        :raise C12SimJobError if there is an error starting a job
-                ValueError if arguments are not proper type
+        :raises C12SimJobError: if there is an error starting a job
+        :raises ValueError: if arguments are not proper type
         """
 
         if not isinstance(run_input, QuantumCircuit) and not isinstance(run_input, list):
