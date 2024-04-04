@@ -25,7 +25,7 @@ setup(
         "Homepage": "https://www.c12qe.com",
         "Source code": "https://github.com/c12qe/c12simulator-clients",
         "Issues": "https://github.com/c12qe/c12simulator-clients/issues",
-        "Documentation": "https://github.com/c12qe/c12simulator-clients/tree/master/docs",
+        "Documentation": "https://c12qe.github.io/c12-callisto-clients/",
     },
     classifiers=[
         "Programming Language :: Python :: 3 :: Only",
