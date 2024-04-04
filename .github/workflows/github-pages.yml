@@ -48,6 +48,7 @@ jobs:
           git fetch --tags
           cd docs
           mkdir _build
+          pip freeze
           python3 build_docs.py
 
       - name: Setup Pages
