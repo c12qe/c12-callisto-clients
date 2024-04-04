@@ -34,7 +34,7 @@ class Request:
     def auth_token(self):
         """
         Getter for the authentication token.
-        
+
         :return: user authentication token
         """
         return self._auth_token
@@ -69,22 +69,16 @@ class Request:
             print(f"Calling API {method}:{url} with params {params}")
 
         if method == "post":
-            response = requests.request(
-                method=method, url=url, data=json.dumps(params), headers=headers, timeout=60
-            )
+            response = requests.request(method=method, url=url, data=json.dumps(params), headers=headers, timeout=60)
         else:
-            response = requests.request(
-                method=method, url=url, params=params, headers=headers, timeout=60
-            )
+            response = requests.request(method=method, url=url, params=params, headers=headers, timeout=60)
         status = response.status_code
 
         if self._verbose:
             print(f"Response {response.status_code}")
 
         if status == 401:
-            raise PermissionError(
-                "You do not have a proper credentials to access the requested endpoint."
-            )
+            raise PermissionError("You do not have a proper credentials to access the requested endpoint.")
 
         if status < 200 or status >= 300:
             raise ApiError(f"Error occurred during the execution of the request: {status}")
@@ -162,7 +156,7 @@ class Request:
         :param backend_name: the name of the backend to run on
         :param ini_noise: specify if we want to apply a noise to the initialisation of the circuit
         :param ini: initial state of the circuit as a string (label) or array of complex numbers
-        :param physical_params: stringify json with physical parameters        
+        :param physical_params: stringify json with physical parameters
         :return: tuple str (job uuid) and transpiled qasm str
         :raises ApiError: if unexpected API error happened
         """
@@ -177,9 +171,7 @@ class Request:
             if isinstance(ini, str):
                 params["inilabel"] = ini
             else:
-                params["inistatevector"] = np.array2string(
-                    np.array(ini), separator=",", suppress_small=True
-                )
+                params["inistatevector"] = np.array2string(np.array(ini), separator=",", suppress_small=True)
         if ini_noise:
             params["ininoise"] = True
 
@@ -196,7 +188,7 @@ class Request:
     def get_maxjobs(self) -> int:
         """
         Call to the API to get the maximum number of jobs per user.
-        
+
         :return: number of jobs (int)
         :raises ApiError: if unexpected API error happened
         """
@@ -209,7 +201,7 @@ class Request:
     def get_params(self) -> dict:
         """
         Call to the API to get the physical parameters of the C12 system.
-        
+
         :return: list of parameters
         :raises ApiError: if unexpected API error has happened
         """
@@ -224,7 +216,7 @@ class Request:
     def get_backends(self) -> list:
         """
         Call to the API to get all available backends.
-        
+
         :return: list of available backends, empty if none available
         :raises ApiError: if unexpected API error happened
         """
@@ -237,7 +229,7 @@ class Request:
     def get_job_status(self, job_uuid: str) -> str:
         """
         Get the status of a running job.
-        
+
         :param job_uuid: job uuid
         :return: status of a job
         """
@@ -252,7 +244,7 @@ class Request:
     def get_job(self, job_uuid: str) -> dict:
         """
         Get a specific job with a given uuid.
-        
+
         :param job_uuid: job_id
         :return: dict of job data
         """
@@ -268,7 +260,7 @@ class Request:
         """
         Get a list of a running job for a specific user, with a support
         for paging.
-        
+
         :param limit:  number of records
         :param offset:  offset
         :return:  list of running jobs

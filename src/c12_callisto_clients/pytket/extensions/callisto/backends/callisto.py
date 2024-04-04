@@ -72,9 +72,7 @@ class CallistoBackend(Backend):
         try:
             backends = request.get_backends()
         except PermissionError as permission_error:
-            raise CallistoRunningException(
-                "You do not have a permission to access the resource!"
-            ) from permission_error
+            raise CallistoRunningException("You do not have a permission to access the resource!") from permission_error
         except ApiError as api_err:
             raise CallistoRunningException(
                 "An error occured during the retrieval of the available backends"
@@ -94,7 +92,7 @@ class CallistoBackend(Backend):
         """
         Getter for obtaining the information about a backend. If the backend is not set, it calls
         private _get_info method to retrieve the information.
-        
+
         :return: BackendInfo or None
         """
         if self._backend_info is None:
@@ -104,7 +102,7 @@ class CallistoBackend(Backend):
     def _get_info(self, backend_name: str) -> Optional[BackendInfo]:
         """
         Get the BackendInfo instance for a given backend_name.
-        
+
         :param backend_name: string representing the backend name for the instance.
         :return: BackendInfo or None
         """
@@ -114,9 +112,7 @@ class CallistoBackend(Backend):
         try:
             backends = self._request.get_backends()
         except PermissionError as permission_error:
-            raise CallistoRunningException(
-                "You do not have a permission to access the resource!"
-            ) from permission_error
+            raise CallistoRunningException("You do not have a permission to access the resource!") from permission_error
         except ApiError as api_err:
             raise CallistoRunningException(
                 "An error occured during the retrieval of the available backends"
@@ -133,7 +129,7 @@ class CallistoBackend(Backend):
         """
         Method to translate from the dictionary that is obtained from the API call to
         the instance of the BackendInfo class.
-         
+
         :param data: data obtained from the API
         :return: BackendInfo
         """
@@ -156,7 +152,7 @@ class CallistoBackend(Backend):
         to be run on one backend.
         This is a property of the class (inherited from the parent, Backend class).
         It is a list of the instances of the classes whose parent class is a Predicate class.
-        
+
         :return: list of the predicates
         """
         predicates = [
@@ -180,18 +176,14 @@ class CallistoBackend(Backend):
 
         seq = [DecomposeBoxes()]  # Decompose boxes into basic gates
         if optimisation_level == 1:
-            seq.append(
-                SynthesiseTket()
-            )  # Optimises and converts all gates to CX, TK1 and Phase gates.
+            seq.append(SynthesiseTket())  # Optimises and converts all gates to CX, TK1 and Phase gates.
         elif optimisation_level == 2:
             seq.append(SynthesiseTket())
             seq.append(SimplifyInitial())  # Simplify the circuit using knowledge of qubit state.
         else:
             seq.append(SynthesiseTket())
             seq.append(SimplifyInitial())
-            seq.append(
-                FullPeepholeOptimise()
-            )  # Deep optimisation and performing a peephole optimisation
+            seq.append(FullPeepholeOptimise())  # Deep optimisation and performing a peephole optimisation
 
         return SequencePass(seq)
 
@@ -199,7 +191,7 @@ class CallistoBackend(Backend):
     def _result_id_type(self) -> _ResultIdTuple:
         """
         The way a job will be represented. Each job will have unique UUID identifier.
-        
+
         :return: tuple (str, str) - (job_uuid, backend_name)
         """
         return (str,)
@@ -209,7 +201,7 @@ class CallistoBackend(Backend):
         """
         Returns a job id from the handle.
         Object to store multidimensional identifiers for a circuit sent to a backend for execution.
-        
+
         :param handle: ResultHandle of a job
         :return: UUID of the job
         """
@@ -219,7 +211,7 @@ class CallistoBackend(Backend):
     def get_circuit_status(status: str) -> StatusEnum:
         """
         Method to transform C12's job statuses to the TKET's StatusEnum values.
-        
+
         :param status: status of the job
         :return: corresponding StatusEnum value
         :raises CallistoRunningException:
@@ -240,7 +232,7 @@ class CallistoBackend(Backend):
     def circuit_status(self, handle: ResultHandle) -> CircuitStatus:
         """
         Method to get the status of the running job if it takes too much time to execute.
-        
+
         :param handle: job handle
         :return: CircuitStatus
         """
@@ -362,7 +354,7 @@ class CallistoBackend(Backend):
     def _convert_result(self, data: dict) -> BackendResult:
         """
         Method to convert the C12 results to the Tket BackendResult class.
-        
+
         :param data:
         :return:
         """
@@ -390,7 +382,7 @@ class CallistoBackend(Backend):
     def get_error_message(self, handle: ResultHandle) -> Optional[str]:
         """
         Method to get an error message if the job has failed its execution.
-        
+
         :param handle: job handle
         :return: error message or None
         """
@@ -414,9 +406,7 @@ class CallistoBackend(Backend):
             status = self.get_circuit_status(data["status"])
 
             if status == StatusEnum.ERROR:
-                raise CallistoRunningException(
-                    f"Error during the circuit execution {data['errors']}"
-                )
+                raise CallistoRunningException(f"Error during the circuit execution {data['errors']}")
 
             backend_result = self._convert_result(data)
             self._update_cache_result(handle, {"result": backend_result})
