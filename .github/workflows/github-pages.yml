@@ -1,8 +1,8 @@
 name: github-pages
 
-on:
-  push:
-    branches: [ master ]
+on: [push, pull_request]
+#  push:
+#    branches: [ master ]
 
 jobs:
   build:
