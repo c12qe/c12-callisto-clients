@@ -72,7 +72,9 @@ class CallistoBackend(Backend):
         try:
             backends = request.get_backends()
         except PermissionError as permission_error:
-            raise CallistoRunningException("You do not have a permission to access the resource!") from permission_error
+            raise CallistoRunningException(
+                "You do not have a permission to access the resource!"
+            ) from permission_error
         except ApiError as api_err:
             raise CallistoRunningException(
                 "An error occured during the retrieval of the available backends"
@@ -112,7 +114,9 @@ class CallistoBackend(Backend):
         try:
             backends = self._request.get_backends()
         except PermissionError as permission_error:
-            raise CallistoRunningException("You do not have a permission to access the resource!") from permission_error
+            raise CallistoRunningException(
+                "You do not have a permission to access the resource!"
+            ) from permission_error
         except ApiError as api_err:
             raise CallistoRunningException(
                 "An error occured during the retrieval of the available backends"
@@ -176,14 +180,18 @@ class CallistoBackend(Backend):
 
         seq = [DecomposeBoxes()]  # Decompose boxes into basic gates
         if optimisation_level == 1:
-            seq.append(SynthesiseTket())  # Optimises and converts all gates to CX, TK1 and Phase gates.
+            seq.append(
+                SynthesiseTket()
+            )  # Optimises and converts all gates to CX, TK1 and Phase gates.
         elif optimisation_level == 2:
             seq.append(SynthesiseTket())
             seq.append(SimplifyInitial())  # Simplify the circuit using knowledge of qubit state.
         else:
             seq.append(SynthesiseTket())
             seq.append(SimplifyInitial())
-            seq.append(FullPeepholeOptimise())  # Deep optimisation and performing a peephole optimisation
+            seq.append(
+                FullPeepholeOptimise()
+            )  # Deep optimisation and performing a peephole optimisation
 
         return SequencePass(seq)
 
@@ -406,7 +414,9 @@ class CallistoBackend(Backend):
             status = self.get_circuit_status(data["status"])
 
             if status == StatusEnum.ERROR:
-                raise CallistoRunningException(f"Error during the circuit execution {data['errors']}")
+                raise CallistoRunningException(
+                    f"Error during the circuit execution {data['errors']}"
+                )
 
             backend_result = self._convert_result(data)
             self._update_cache_result(handle, {"result": backend_result})

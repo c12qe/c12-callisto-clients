@@ -69,16 +69,22 @@ class Request:
             print(f"Calling API {method}:{url} with params {params}")
 
         if method == "post":
-            response = requests.request(method=method, url=url, data=json.dumps(params), headers=headers, timeout=60)
+            response = requests.request(
+                method=method, url=url, data=json.dumps(params), headers=headers, timeout=60
+            )
         else:
-            response = requests.request(method=method, url=url, params=params, headers=headers, timeout=60)
+            response = requests.request(
+                method=method, url=url, params=params, headers=headers, timeout=60
+            )
         status = response.status_code
 
         if self._verbose:
             print(f"Response {response.status_code}")
 
         if status == 401:
-            raise PermissionError("You do not have a proper credentials to access the requested endpoint.")
+            raise PermissionError(
+                "You do not have a proper credentials to access the requested endpoint."
+            )
 
         if status < 200 or status >= 300:
             raise ApiError(f"Error occurred during the execution of the request: {status}")
@@ -171,7 +177,9 @@ class Request:
             if isinstance(ini, str):
                 params["inilabel"] = ini
             else:
-                params["inistatevector"] = np.array2string(np.array(ini), separator=",", suppress_small=True)
+                params["inistatevector"] = np.array2string(
+                    np.array(ini), separator=",", suppress_small=True
+                )
         if ini_noise:
             params["ininoise"] = True
 

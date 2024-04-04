@@ -179,7 +179,9 @@ class C12SimBackend(BackendV2):
 
     @property
     def dtm(self) -> float:
-        raise NotImplementedError(f"System time resolution of output signals is not supported by {self._backend_name}.")
+        raise NotImplementedError(
+            f"System time resolution of output signals is not supported by {self._backend_name}."
+        )
 
     @property
     def meas_map(self) -> List[List[int]]:
@@ -209,7 +211,9 @@ class C12SimBackend(BackendV2):
 
                 ini_circuit = tmp_qc.copy_empty_like()
                 ini_circuit.append(instruction, qargs, cargs)
-                ini_circuit = ini_circuit.decompose()  # It has to be done for the OpenQASM 2.0 it will fail otherwise
+                ini_circuit = (
+                    ini_circuit.decompose()
+                )  # It has to be done for the OpenQASM 2.0 it will fail otherwise
 
                 # Pass over the ini_circuit and append it
                 # The best way would be to append two circuits

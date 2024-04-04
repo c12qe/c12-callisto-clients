@@ -151,7 +151,9 @@ class C12SimJob(JobV1):
                 wait=wait,
             )
         except ApiError as err:
-            raise C12SimApiError("Unexpected error happened during the accessing the remote server") from err
+            raise C12SimApiError(
+                "Unexpected error happened during the accessing the remote server"
+            ) from err
         except TimeoutError as err2:
             raise C12SimJobError("Timeout occurred while waiting for job execution") from err2
 
@@ -223,7 +225,9 @@ class C12SimJob(JobV1):
     def result(self, timeout: Optional[float] = None, wait: float = 5):
         if not self._wait_for_completion(timeout, wait, required_states=(JobStatus.DONE,)):
             if self._status is JobStatus.CANCELLED:
-                raise C12SimJobError(f"Unable to retrieve result for job {self._job_id}. Job was cancelled")
+                raise C12SimJobError(
+                    f"Unable to retrieve result for job {self._job_id}. Job was cancelled"
+                )
 
             if self._status is JobStatus.ERROR:
                 raise C12SimJobError(
@@ -262,7 +266,9 @@ class C12SimJob(JobV1):
         try:
             status = self._backend.request.get_job_status(self._job_id)
         except ApiError as err:
-            raise C12SimApiError("Unexpected error happened during the accessing the remote server") from err
+            raise C12SimApiError(
+                "Unexpected error happened during the accessing the remote server"
+            ) from err
 
         self._status = get_qiskit_status(status)
 
@@ -280,7 +286,11 @@ class C12SimJob(JobV1):
             return self.metadata["metadata"]["qasm"]
         else:
             # Added for some backward compatibility
-            return self.metadata["metadata"]["qasm_orig"] if "qasm_orig" in self.metadata["metadata"] else None
+            return (
+                self.metadata["metadata"]["qasm_orig"]
+                if "qasm_orig" in self.metadata["metadata"]
+                else None
+            )
 
     def get_circuit(self, transpiled: bool = False) -> Optional[QuantumCircuit]:
         """

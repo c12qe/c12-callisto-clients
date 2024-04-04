@@ -7,7 +7,9 @@ from c12_callisto_clients.qiskit.c12sim_provider import C12SimProvider
 
 
 def add_arguments():
-    arg_parser.add_argument("--config", help="Use config file to get all data", default=None, nargs="?", const=True)
+    arg_parser.add_argument(
+        "--config", help="Use config file to get all data", default=None, nargs="?", const=True
+    )
 
     arg_parser.add_argument(
         "--verbose",
