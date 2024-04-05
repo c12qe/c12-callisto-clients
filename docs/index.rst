@@ -56,11 +56,11 @@ And finally install the dependencies with
 
    poetry install
 
-Getting started
+Tutorials
 ====================================
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Tutorials:
 
 
    self
@@ -74,9 +74,8 @@ Getting started
    6. Physical parameters of the system.ipynb
    7. Tket backend.ipynb
 
-
-Indices and tables
+API reference
 ==================
 
-* :ref:`genindex`
 * :ref:`modindex`
+* :ref:`genindex`
