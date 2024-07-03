@@ -66,3 +66,7 @@ Jupyter notebooks are available at: <a href="https://github.com/c12qe/c12-callis
 
 </ol>
 
+
+## Licence 
+
+Licence EULA document can be seen <a href="https://github.com/c12qe/c12-callisto-clients/blob/master/20231110_C12_EULA%20Callisto%20-%20vf.pdf"> here </a>
