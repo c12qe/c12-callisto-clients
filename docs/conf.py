@@ -83,6 +83,4 @@ if docs is not None and docs.items() is not None:
             )
 
     for version, details in docs.items():
-        html_context["versions"].append(
-            [version, pages_root + "/" + version + "/" + current_language]
-        )
+        html_context["versions"].append([version, pages_root + version + "/" + current_language])
