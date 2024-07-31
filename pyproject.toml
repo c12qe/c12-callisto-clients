@@ -10,7 +10,7 @@ qiskit = "^0.42.0"
 requests = "^2.28.2"
 pydantic = "^1.10.6"
 traitlets = "5.9.0"
-pytket = "^1.21.0"
+pytket = "1.20.0"
 
 [tool.poetry.dev-dependencies]
 black = {extras = ["d"], version = "^24.3.0"}

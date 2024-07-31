@@ -9,7 +9,7 @@ except FileNotFoundError:
 
 
 # Get version from the environment variable
-version = os.environ.get("SOURCE_TAG", "2.0.1")
+version = os.environ.get("SOURCE_TAG", "2.1.0")
 
 
 setup(
@@ -43,7 +43,7 @@ setup(
         "Topic :: Scientific/Engineering",
     ],
     keywords="qiskit quantum c12 simulator",
-    install_requires=["requests~=2.28", "qiskit~=0.41", "pydantic~=1.10"],
+    install_requires=["requests~=2.28", "qiskit~=0.41", "pydantic~=1.10", "pytket~=1.20.0"],
     python_requires=">=3.7",
     include_package_data=False,
     package_dir={"c12_callisto_clients": "src/c12_callisto_clients"},
