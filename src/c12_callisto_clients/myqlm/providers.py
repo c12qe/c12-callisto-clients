@@ -509,7 +509,7 @@ if __name__ == "__main__":
     import time
     from qat.lang.AQASM import Program, H
 
-    user_auth_token = os.getenv("C12_TOKEN", "3ae88c08-29cf-456e-b284-e01add5ca833")
+    user_auth_token = os.getenv("C12_TOKEN", "")
     configs = UserConfigs.parse_obj({"token": user_auth_token})
 
     qpu = CallistoBackendToQPU(configs, name="c12sim-iswap")
