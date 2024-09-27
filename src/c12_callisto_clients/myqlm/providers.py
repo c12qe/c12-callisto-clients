@@ -79,9 +79,11 @@ def _convert_json_to_np_array(data) -> np.ndarray:
     return array
 
 
-# Callisto backend to myQLM QPU Handler
-# Backend accepts the QLM circuit and returns the QLM results
 class CallistoBackendToQPU(QPUHandler):
+    """
+    Callisto backend to myQLM QPU Handler
+    Backend accepts the QLM circuit and returns the QLM results
+    """
 
     _backend = None
 
@@ -102,7 +104,7 @@ class CallistoBackendToQPU(QPUHandler):
             circuit = job_to_qiskit_circuit(qlm_job, only_sampling=True)
             qiskit_circuits.append(circuit)
 
-            job_uuid, transpiled_qasm = self._request.start_job(
+            job_uuid, _ = self._request.start_job(
                 qasm_str=circuit.qasm(),
                 shots=qlm_job.nbshots,
                 result="counts",
@@ -111,9 +113,9 @@ class CallistoBackendToQPU(QPUHandler):
             qiskit_result = self._wait_for_completion(job_uuid, shots=qlm_job.nbshots)
             qiskit_results.append(qiskit_result)
 
-        results = generate_qlm_list_results(qiskit_results[0])
+        batch_results = generate_qlm_list_results(qiskit_results[0])
         new_results = []
-        for result in results:
+        for result in batch_results:
             new_results.append(WResult.from_thrift(result))
         return _wrap_results(qlm_batch, new_results, 100000)
 
@@ -125,15 +127,17 @@ class CallistoBackendToQPU(QPUHandler):
         It is a QPUHandler that is going to use the CallistoSimProvider to get the backend
 
         :param user_configs: UserConfigs object that contains the token for the access to the remote server
-        :param name: string representing the name of the backend. it is optional and if not provide it has a default
-                    value of c12sim-iswap
+        :param name: string representing the name of the backend. it is optional and if not provide
+                    it has a default value of c12sim-iswap
         :param plugins:  Any plugins to be added (c.f qat.core documentation)
         """
         super().__init__(plugins)
         self._name = name
         self._user_configs = user_configs
 
-        self._request = Request(self._user_configs.token, self._user_configs.verbose)
+        self._request = Request(
+            self._user_configs.token, self._user_configs.verbose
+        )  # Request object for the API calls
         self.set_backend(name, self._user_configs.token, self._user_configs.verbose)
 
     def set_backend(self, backend_name: str, token: str, verbose: bool = False):
@@ -246,14 +250,12 @@ class CallistoBackendToQPU(QPUHandler):
 if __name__ == "__main__":
 
     import os
+    from qat.lang.AQASM import Program, H
 
     user_auth_token = os.getenv("C12_TOKEN", "3ae88c08-29cf-456e-b284-e01add5ca833")
     configs = UserConfigs.parse_obj({"token": user_auth_token})
 
-    nbqubits = 2
     qpu = CallistoBackendToQPU(configs, name="c12sim-iswap")
-
-    from qat.lang.AQASM import Program, H
 
     prog = Program()
     reg = prog.qalloc(1)
