@@ -1,11 +1,10 @@
+# pylint: disable=import-error
 from typing import Optional, List
 import numpy as np
-
 
 from qiskit.providers.jobstatus import JobStatus
 from qiskit.result.models import ExperimentResult, ExperimentResultData
 from qiskit.result import Result as QiskitResult
-from qiskit import QuantumRegister, QuantumCircuit
 
 from qat.core.wrappers.result import Result as WResult
 from qat.comm.shared.ttypes import Job, Batch
@@ -21,6 +20,47 @@ from qat.interop.qiskit.providers import (
 from c12_callisto_clients.user_configs import UserConfigs
 from c12_callisto_clients.api.client import Request
 from c12_callisto_clients.api.exceptions import ApiError
+
+
+def _parse_result_data(result_data, shots) -> List[ExperimentResult]:
+    """
+    Parse result dictionary.
+    """
+
+    if result_data is None:
+        return []
+    if "counts" not in result_data or "statevector" not in result_data:
+        raise ValueError("Error getting the information from the system.")
+
+    # Getting the counts & statevector of the circuit after execution
+    counts = result_data["counts"]
+    statevector = _convert_json_to_np_array(result_data["statevector"])
+
+    # Additional mid-circuit data (if any)
+    additional_data = {}
+    if "states" in result_data:
+        states = result_data["states"]
+
+        if "density_matrix" in states and "statevector" in states:
+            dms = states["density_matrix"]
+            svs = states["statevector"]
+
+            for key in svs.keys():
+                svs[key] = _convert_json_to_np_array(svs[key])
+
+            for key in dms.keys():
+                dms[key] = _convert_json_to_np_matrix(dms[key])
+
+            additional_data = {**dms, **svs}
+
+    experiment = ExperimentResult(
+        shots=shots,
+        success=True,
+        status="FINISHED",
+        data=ExperimentResultData(counts=counts, statevector=statevector, **additional_data),
+    )
+
+    return [experiment]
 
 
 def _convert_json_to_np_matrix(data) -> np.ndarray:
@@ -39,7 +79,8 @@ def _convert_json_to_np_array(data) -> np.ndarray:
     return array
 
 
-# FINAL CLASS
+# Callisto backend to myQLM QPU Handler
+# Backend accepts the QLM circuit and returns the QLM results
 class CallistoBackendToQPU(QPUHandler):
 
     _backend = None
@@ -127,46 +168,6 @@ class CallistoBackendToQPU(QPUHandler):
     def backend(self):
         return self._backend
 
-    def _parse_result_data(self, result_data, shots) -> List[ExperimentResult]:
-        """
-        Parse result dictionary.
-        """
-
-        if result_data is None:
-            return []
-        if "counts" not in result_data or "statevector" not in result_data:
-            raise ValueError("Error getting the information from the system.")
-
-        # Getting the counts & statevector of the circuit after execution
-        counts = result_data["counts"]
-        statevector = _convert_json_to_np_array(result_data["statevector"])
-
-        # Additional mid-circuit data (if any)
-        additional_data = {}
-        if "states" in result_data:
-            states = result_data["states"]
-
-            if "density_matrix" in states and "statevector" in states:
-                dms = states["density_matrix"]
-                svs = states["statevector"]
-
-                for key in svs.keys():
-                    svs[key] = _convert_json_to_np_array(svs[key])
-
-                for key in dms.keys():
-                    dms[key] = _convert_json_to_np_matrix(dms[key])
-
-                additional_data = {**dms, **svs}
-
-        experiment = ExperimentResult(
-            shots=shots,
-            success=True,
-            status="FINISHED",
-            data=ExperimentResultData(counts=counts, statevector=statevector, **additional_data),
-        )
-
-        return [experiment]
-
     def submit_job(self, qlm_job):
         """
         Submits a Job to execute on a Callisto backend.
@@ -186,12 +187,13 @@ class CallistoBackendToQPU(QPUHandler):
         shots = qlm_job.nbshots or self._backend["max_shots"]
 
         try:
-            job_uuid, transpiled_qasm = self._request.start_job(
+            job_uuid, _ = self._request.start_job(
                 qasm_str=qasm,
                 shots=shots,
                 result="counts",
                 backend_name=self.backend["backend_name"],
             )
+            qlm_job.job_id = job_uuid
         except ApiError as err:
             raise ConnectionRefusedError(
                 f"Error starting a job on the remote server {err}"
@@ -230,7 +232,7 @@ class CallistoBackendToQPU(QPUHandler):
                 job_id=job_id,
                 qobj_id=0,
                 success=job_result["status"] == JobStatus.DONE,
-                results=self._parse_result_data(job_result["results"], shots),
+                results=_parse_result_data(job_result["results"], shots),
                 status=job_result["status"],
             )
         except ApiError as err:
@@ -249,16 +251,6 @@ if __name__ == "__main__":
     configs = UserConfigs.parse_obj({"token": user_auth_token})
 
     nbqubits = 2
-
-    qreg = QuantumRegister(nbqubits)
-    # creg = ClassicalRegister(nbqubits)
-
-    qiskit_circuit = QuantumCircuit(qreg)
-
-    qiskit_circuit.h(qreg[0])
-    qiskit_circuit.cx(qreg[0], qreg[1])
-    qiskit_circuit.measure_all()
-
     qpu = CallistoBackendToQPU(configs, name="c12sim-iswap")
 
     from qat.lang.AQASM import Program, H
