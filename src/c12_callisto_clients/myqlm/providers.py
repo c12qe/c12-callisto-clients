@@ -1,13 +1,18 @@
 # pylint: disable=import-error
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 import numpy as np
+import networkx as nx
 
 from qiskit.providers.jobstatus import JobStatus
 from qiskit.result.models import ExperimentResult, ExperimentResultData
 from qiskit.result import Result as QiskitResult
 
+from qat.core.gate_set import GateSet
+from qat.lang import RX, RZ, RY, ISWAP, SWAP, CNOT as CX
+from qat.core import HardwareSpecs
+from qat.core import Topology
 from qat.core.wrappers.result import Result as WResult
-from qat.comm.shared.ttypes import Job, Batch
+from qat.comm.shared.ttypes import Job, Batch, ProcessingType
 from qat.core.qpu.qpu import QPUHandler
 from qat.interop.qiskit.providers import (
     generate_qlm_list_results,
@@ -20,6 +25,15 @@ from qat.interop.qiskit.providers import (
 from c12_callisto_clients.user_configs import UserConfigs
 from c12_callisto_clients.api.client import Request
 from c12_callisto_clients.api.exceptions import ApiError
+
+GATE_SET_MAP: Dict[str, Any] = {
+    "RX": RX,
+    "RY": RY,
+    "RZ": RZ,
+    "ISWAP": ISWAP,
+    "CX": CX,
+    "SWAP": SWAP,
+}
 
 
 def _parse_result_data(result_data, shots) -> List[ExperimentResult]:
@@ -86,6 +100,7 @@ class CallistoBackendToQPU(QPUHandler):
     """
 
     _backend = None
+    _callisto_specs = None
 
     def _submit_batch(self, qlm_batch):
         """
@@ -113,11 +128,17 @@ class CallistoBackendToQPU(QPUHandler):
             qiskit_result = self._wait_for_completion(job_uuid, shots=qlm_job.nbshots)
             qiskit_results.append(qiskit_result)
 
-        batch_results = generate_qlm_list_results(qiskit_results[0])
+        batch_results = [generate_qlm_list_results(res) for res in qiskit_results]
         new_results = []
         for result in batch_results:
-            new_results.append(WResult.from_thrift(result))
+            new_results.append(WResult.from_thrift(result[0]))
         return _wrap_results(qlm_batch, new_results, 100000)
+
+    def get_specs(self):
+        """
+        Returns the backend specifications.
+        """
+        return self._callisto_specs
 
     def __init__(
         self, user_configs: UserConfigs, name: Optional[str] = "c12sim-iswap", plugins=None
@@ -140,6 +161,45 @@ class CallistoBackendToQPU(QPUHandler):
         )  # Request object for the API calls
         self.set_backend(name, self._user_configs.token, self._user_configs.verbose)
 
+    def _set_backend_specs(self):
+        """
+        Function to set the backend specifications for the Callisto backend.
+        :return:
+        """
+
+        basis_gates = self._backend["basis_gates"]
+        basis_gate_set_map = {
+            gate.upper(): GATE_SET_MAP[gate.upper()]
+            for gate in basis_gates
+            if gate.upper() in GATE_SET_MAP
+        }
+
+        basis_gate_set = GateSet(basis_gate_set_map)
+
+        max_nqubits = self._backend["n_qubits"]
+        # Create an array of every possible combination of the qubits that is a current Topology of the system
+        topology_arr = []
+        for i in range(max_nqubits):
+            for j in range(i + 1, max_nqubits):
+                topology_arr.append((i, j))
+                topology_arr.append((j, i))
+
+        graph = nx.Graph(topology_arr)
+        topology = Topology.from_nx(graph)
+
+        self._callisto_specs = HardwareSpecs(
+            nbqbits=max_nqubits,
+            topology=topology,
+            gateset=basis_gate_set,
+            processing_types=[ProcessingType.SAMPLE],
+            description="Callisto specs",
+            meta_data={
+                "Date": "2024-09-27 10:50:00",
+                "max_shots": self._backend["max_shots"],
+                "max_circuits": self._backend["max-circuits"],
+            },
+        )
+
     def set_backend(self, backend_name: str, token: str, verbose: bool = False):
         """
         Function to set the backend for the C12BackendToQPU class.
@@ -159,6 +219,8 @@ class CallistoBackendToQPU(QPUHandler):
                 raise NotImplementedError(f"No backend available with a name: {backend_name}")
 
             self._backend = backends[0]
+            self._set_backend_specs()
+
         except PermissionError as p_err:
             raise PermissionError(
                 "Permission error occurred during the access to the remote server"
@@ -263,6 +325,11 @@ if __name__ == "__main__":
 
     job = prog.to_circ().to_job(nbshots=10024)
 
+    jobs = [job, job]
+
     print("Selected backend:", qpu.backend)
     results = qpu.submit(job)
     print(results)
+
+    print("=== Specs ===")
+    print(qpu.get_specs())
