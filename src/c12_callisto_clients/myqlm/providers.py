@@ -34,6 +34,7 @@ GATE_SET_MAP: Dict[str, Any] = {
     "CX": CX,
     "SWAP": SWAP,
 }
+BACKEND_VERSION: str = "1.0.0"
 
 
 def _parse_result_data(result_data, shots) -> List[ExperimentResult]:
@@ -294,7 +295,7 @@ class CallistoBackendToQPU(QPUHandler):
 
             return QiskitResult(
                 backend_name=self._backend["backend_name"],
-                backend_version="0.0.1",
+                backend_version=BACKEND_VERSION,
                 job_id=job_id,
                 qobj_id=0,
                 success=job_result["status"] == JobStatus.DONE,
