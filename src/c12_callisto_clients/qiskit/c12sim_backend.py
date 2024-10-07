@@ -1,7 +1,8 @@
 from typing import Iterable, List, Optional, Dict, Tuple, Union, NewType
 from numpy import pi
+from qiskit import qasm2
 from qiskit.circuit.equivalence_library import SessionEquivalenceLibrary
-from qiskit.quantum_info import TwoQubitBasisDecomposer
+from qiskit.synthesis import TwoQubitBasisDecomposer
 from qiskit.providers import BackendV2, Provider, Options
 from qiskit.transpiler import Target, InstructionProperties
 from qiskit.circuit import Measure, Parameter, QuantumCircuit
@@ -224,7 +225,7 @@ class C12SimBackend(BackendV2):
             else:
                 tmp_qc.append(instruction, qargs, cargs)
 
-        return tmp_qc.qasm(formatted=False)
+        return qasm2.dumps(tmp_qc)
 
     def run(self, run_input, **options) -> Union[C12SimJob, List[C12SimJob]]:
         """
