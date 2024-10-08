@@ -71,8 +71,7 @@ Getting started
    3. Working_with_jobs.ipynb
    4. Using API.ipynb
    5. Getting mid circuit states.ipynb
-   6. Physical parameters of the system.ipynb
-   7. Tket backend.ipynb
+   6. Tket backend.ipynb
 
 
 Indices and tables
