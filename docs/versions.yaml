@@ -2,8 +2,13 @@
 #   tag: 'furo_test'
 #   languages:
 #     - "en"
+"2.2.0":
+  tag: '2.2.0'
+  languages:
+      - "en"
 
 "2.1.0":
   tag: '2.1.0'
   languages:
       - "en"
+
