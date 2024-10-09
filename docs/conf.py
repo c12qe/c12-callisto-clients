@@ -29,7 +29,7 @@ html_theme = "furo"
 html_static_path = ["_static"]
 html_favicon = "_static/favicon.png"
 html_theme_options = {
-    f"announcement": f"We're pleased to announce that <bold>CALLISTO {current_version if current_version != 'latest' else '0.0.6' }</bold> is now released!",
+    f"announcement": f"We're pleased to announce that <bold>CALLISTO {current_version if current_version != 'latest' else '2.2.0' }</bold> is now released!",
     "light_css_variables": {
         "color-brand-primary": "#3A3938",
         "color-brand-content": "#D6A018",
