@@ -2,7 +2,7 @@
 name = "c12_callisto_clients"
 version = "0.0.1"
 description = ""
-authors = ["Viktor Radovic"]
+authors = ["C12 Quantum Electronics"]
 
 [tool.poetry.dependencies]
 python = "~3.10"

@@ -19,11 +19,8 @@ jobs:
           sudo apt-get install pandoc
           pip install setuptools
           pip install sphinx_rtd_theme sphinx myst_parser myst-parser nbsphinx furo setuptools
-          pip install qiskit==0.42.0 requests==2.28.2 pydantic==1.10.6 pytket==1.21.0 traitlets==5.9.0 numpy
-          
+          pip install qiskit requests pydantic pytket traitlets numpy
 
-      
-      
       - name: build
         run: |
           git fetch --tags
