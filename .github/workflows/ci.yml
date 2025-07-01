@@ -45,7 +45,11 @@ jobs:
 
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root
+        run: |
+          poetry lock
+          poetry install --no-interaction --no-root
+          
+          
 
       - name: Check lint
         run: |
@@ -81,7 +85,10 @@ jobs:
 
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root
+        run: |
+          poetry lock
+          poetry install --no-interaction --no-root
+          
 
       - name: Run tests
         run: |
