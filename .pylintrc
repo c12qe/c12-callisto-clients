@@ -4,7 +4,7 @@ fail-under=7.0
 
 [MESSAGES CONTROL]
 
-disable=missing-module-docstring
+disable=missing-module-docstring, import-error
 
 [DESIGN]
 
