@@ -93,5 +93,4 @@ jobs:
       - name: Run tests
         run: |
           source .venv/bin/activate
-          coverage run --source=src -m pytest
-          coverage html
+          pytest
