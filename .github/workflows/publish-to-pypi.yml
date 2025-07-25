@@ -48,7 +48,7 @@ jobs:
 
       - name: build for upload to pypi
         run: |
-          python -m build --wheel --sdist -ns
+          poetry build --format wheel
         env:
           SOURCE_TAG: ${{ steps.tag_name.outputs.SOURCE_TAG }}
 
