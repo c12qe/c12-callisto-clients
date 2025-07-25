@@ -1,0 +1,508 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" />
+
+    <link rel="shortcut icon" href="_static/favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+        <title>c12_callisto_clients package - CALLISTO 2.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=37c8b8a1" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  --color-brand-primary: #3A3938;
+  --color-brand-content: #D6A018;
+  --color-brand-visited: #A09D98;
+  --font-stack: Formular, Cardone Micro Trial, Inconsolata, monospace;
+  --font-stack--monospace: Fira Code, Courier, monospace;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #C6E5E1;
+  --color-brand-content: #D6A018;
+  --color-brand-visited: #A09D98;
+  --font-stack: Formular, Cardone Micro Trial, Inconsolata, monospace;
+  --font-stack--monospace: Fira Code, Courier, monospace;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #C6E5E1;
+  --color-brand-content: #D6A018;
+  --color-brand-visited: #A09D98;
+  --font-stack: Formular, Cardone Micro Trial, Inconsolata, monospace;
+  --font-stack--monospace: Fira Code, Courier, monospace;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<div class="announcement">
+  <aside class="announcement-content">
+     We're pleased to announce that <bold>CALLISTO 0.0.6</bold> is now released! 
+  </aside>
+</div>
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">CALLISTO 2.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="_static/logo_black.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="_static/logo_white.svg" alt="Dark Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">CALLISTO 2.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.%20README.html">Callisto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.%20Short_introduction_to_Qiskit.html">Qiskit basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.%20Using_the_C12_emulator.html">Using the C12 emulator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3.%20Working_with_jobs.html">Working with jobs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4.%20Using%20API.html">Using the API to run the emulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5.%20Getting%20mid%20circuit%20states.html">Getting the mid-circuit states</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6.%20Physical%20parameters%20of%20the%20system.html">Physical parameters of the C12 system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7.%20Tket%20backend.html">Callisto tket framework</a></li>
+</ul>
+
+</div>
+</div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    Version: latest
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    
+    <dl>
+      <dt>Languages</dt>
+        
+          <dd><a href="/index.html">en</a></dd>
+        
+    </dl>
+    
+    
+    <dl>
+      <dt>Versions</dt>
+      
+        <dd><a href="/index.html">latest</a></dd>
+      
+        <dd><a href="0.0.6/en/index.html">0.0.6</a></dd>
+      
+        <dd><a href="2.1.0/en/index.html">2.1.0</a></dd>
+      
+    </dl>
+    
+    <br>
+    </dl>
+  </div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="c12-callisto-clients-package">
+<h1>c12_callisto_clients package<a class="headerlink" href="#c12-callisto-clients-package" title="Link to this heading">#</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="c12_callisto_clients.api.html">c12_callisto_clients.api package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.api.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.api.html#module-c12_callisto_clients.api.client">c12_callisto_clients.api.client module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="c12_callisto_clients.api.html#c12_callisto_clients.api.client.Request"><code class="docutils literal notranslate"><span class="pre">Request</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.api.html#c12_callisto_clients.api.client.Request.auth_token"><code class="docutils literal notranslate"><span class="pre">Request.auth_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.api.html#c12_callisto_clients.api.client.Request.do_request"><code class="docutils literal notranslate"><span class="pre">Request.do_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.api.html#c12_callisto_clients.api.client.Request.get_backends"><code class="docutils literal notranslate"><span class="pre">Request.get_backends()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.api.html#c12_callisto_clients.api.client.Request.get_job"><code class="docutils literal notranslate"><span class="pre">Request.get_job()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.api.html#c12_callisto_clients.api.client.Request.get_job_result"><code class="docutils literal notranslate"><span class="pre">Request.get_job_result()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.api.html#c12_callisto_clients.api.client.Request.get_job_status"><code class="docutils literal notranslate"><span class="pre">Request.get_job_status()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.api.html#c12_callisto_clients.api.client.Request.get_maxjobs"><code class="docutils literal notranslate"><span class="pre">Request.get_maxjobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.api.html#c12_callisto_clients.api.client.Request.get_params"><code class="docutils literal notranslate"><span class="pre">Request.get_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.api.html#c12_callisto_clients.api.client.Request.get_user_jobs"><code class="docutils literal notranslate"><span class="pre">Request.get_user_jobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.api.html#c12_callisto_clients.api.client.Request.start_job"><code class="docutils literal notranslate"><span class="pre">Request.start_job()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.api.html#module-c12_callisto_clients.api.configs">c12_callisto_clients.api.configs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.api.html#module-c12_callisto_clients.api.exceptions">c12_callisto_clients.api.exceptions module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="c12_callisto_clients.api.html#c12_callisto_clients.api.exceptions.ApiError"><code class="docutils literal notranslate"><span class="pre">ApiError</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.api.html#module-c12_callisto_clients.api">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="c12_callisto_clients.pytket.html">c12_callisto_clients.pytket package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.pytket.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="c12_callisto_clients.pytket.extensions.html">c12_callisto_clients.pytket.extensions package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.pytket.extensions.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.pytket.extensions.html#module-c12_callisto_clients.pytket.extensions">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.pytket.html#module-c12_callisto_clients.pytket">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="c12_callisto_clients.qiskit.html">c12_callisto_clients.qiskit package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.qiskit.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.qiskit.html#module-c12_callisto_clients.qiskit.c12sim_backend">c12_callisto_clients.qiskit.c12sim_backend module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_backend.C12SimBackend"><code class="docutils literal notranslate"><span class="pre">C12SimBackend</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_backend.C12SimBackend.acquire_channel"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.acquire_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_backend.C12SimBackend.control_channel"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.control_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_backend.C12SimBackend.drive_channel"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.drive_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_backend.C12SimBackend.dtm"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.dtm</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_backend.C12SimBackend.get_job"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.get_job()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_backend.C12SimBackend.jobs"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.jobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_backend.C12SimBackend.max_circuits"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.max_circuits</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_backend.C12SimBackend.meas_map"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.meas_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_backend.C12SimBackend.measure_channel"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.measure_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_backend.C12SimBackend.request"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.request</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_backend.C12SimBackend.run"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_backend.C12SimBackend.target"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.target</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.qiskit.html#module-c12_callisto_clients.qiskit.c12sim_job">c12_callisto_clients.qiskit.c12sim_job module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_job.C12SimJob"><code class="docutils literal notranslate"><span class="pre">C12SimJob</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_job.C12SimJob.backend"><code class="docutils literal notranslate"><span class="pre">C12SimJob.backend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_job.C12SimJob.cancel"><code class="docutils literal notranslate"><span class="pre">C12SimJob.cancel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_job.C12SimJob.error_message"><code class="docutils literal notranslate"><span class="pre">C12SimJob.error_message()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_job.C12SimJob.get_circuit"><code class="docutils literal notranslate"><span class="pre">C12SimJob.get_circuit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_job.C12SimJob.get_mid_density_matrix"><code class="docutils literal notranslate"><span class="pre">C12SimJob.get_mid_density_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_job.C12SimJob.get_mid_statevector"><code class="docutils literal notranslate"><span class="pre">C12SimJob.get_mid_statevector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_job.C12SimJob.get_qasm"><code class="docutils literal notranslate"><span class="pre">C12SimJob.get_qasm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_job.C12SimJob.refresh"><code class="docutils literal notranslate"><span class="pre">C12SimJob.refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_job.C12SimJob.result"><code class="docutils literal notranslate"><span class="pre">C12SimJob.result()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_job.C12SimJob.shots"><code class="docutils literal notranslate"><span class="pre">C12SimJob.shots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_job.C12SimJob.status"><code class="docutils literal notranslate"><span class="pre">C12SimJob.status()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_job.C12SimJob.submit"><code class="docutils literal notranslate"><span class="pre">C12SimJob.submit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_job.get_qiskit_status"><code class="docutils literal notranslate"><span class="pre">get_qiskit_status()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.qiskit.html#module-c12_callisto_clients.qiskit.c12sim_provider">c12_callisto_clients.qiskit.c12sim_provider module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_provider.C12SimProvider"><code class="docutils literal notranslate"><span class="pre">C12SimProvider</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_provider.C12SimProvider.backends"><code class="docutils literal notranslate"><span class="pre">C12SimProvider.backends()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_provider.C12SimProvider.get_backend"><code class="docutils literal notranslate"><span class="pre">C12SimProvider.get_backend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.c12sim_provider.C12SimProvider.user_configs"><code class="docutils literal notranslate"><span class="pre">C12SimProvider.user_configs</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.qiskit.html#module-c12_callisto_clients.qiskit.exceptions">c12_callisto_clients.qiskit.exceptions module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.exceptions.C12SimApiError"><code class="docutils literal notranslate"><span class="pre">C12SimApiError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="c12_callisto_clients.qiskit.html#c12_callisto_clients.qiskit.exceptions.C12SimJobError"><code class="docutils literal notranslate"><span class="pre">C12SimJobError</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.qiskit.html#module-c12_callisto_clients.qiskit">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html">c12_callisto_clients.qiskit_back package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#module-c12_callisto_clients.qiskit_back.c12sim_backend">c12_callisto_clients.qiskit_back.c12sim_backend module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_backend.C12SimBackend"><code class="docutils literal notranslate"><span class="pre">C12SimBackend</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_backend.C12SimBackend.acquire_channel"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.acquire_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_backend.C12SimBackend.control_channel"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.control_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_backend.C12SimBackend.drive_channel"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.drive_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_backend.C12SimBackend.dtm"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.dtm</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_backend.C12SimBackend.get_job"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.get_job()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_backend.C12SimBackend.jobs"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.jobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_backend.C12SimBackend.max_circuits"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.max_circuits</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_backend.C12SimBackend.meas_map"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.meas_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_backend.C12SimBackend.measure_channel"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.measure_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_backend.C12SimBackend.request"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.request</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_backend.C12SimBackend.run"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_backend.C12SimBackend.target"><code class="docutils literal notranslate"><span class="pre">C12SimBackend.target</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#module-c12_callisto_clients.qiskit_back.c12sim_job">c12_callisto_clients.qiskit_back.c12sim_job module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_job.C12SimJob"><code class="docutils literal notranslate"><span class="pre">C12SimJob</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_job.C12SimJob.backend"><code class="docutils literal notranslate"><span class="pre">C12SimJob.backend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_job.C12SimJob.cancel"><code class="docutils literal notranslate"><span class="pre">C12SimJob.cancel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_job.C12SimJob.error_message"><code class="docutils literal notranslate"><span class="pre">C12SimJob.error_message()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_job.C12SimJob.get_circuit"><code class="docutils literal notranslate"><span class="pre">C12SimJob.get_circuit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_job.C12SimJob.get_mid_density_matrix"><code class="docutils literal notranslate"><span class="pre">C12SimJob.get_mid_density_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_job.C12SimJob.get_mid_statevector"><code class="docutils literal notranslate"><span class="pre">C12SimJob.get_mid_statevector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_job.C12SimJob.get_qasm"><code class="docutils literal notranslate"><span class="pre">C12SimJob.get_qasm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_job.C12SimJob.refresh"><code class="docutils literal notranslate"><span class="pre">C12SimJob.refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_job.C12SimJob.result"><code class="docutils literal notranslate"><span class="pre">C12SimJob.result()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_job.C12SimJob.shots"><code class="docutils literal notranslate"><span class="pre">C12SimJob.shots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_job.C12SimJob.status"><code class="docutils literal notranslate"><span class="pre">C12SimJob.status()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_job.C12SimJob.submit"><code class="docutils literal notranslate"><span class="pre">C12SimJob.submit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_job.get_qiskit_status"><code class="docutils literal notranslate"><span class="pre">get_qiskit_status()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#module-c12_callisto_clients.qiskit_back.c12sim_provider">c12_callisto_clients.qiskit_back.c12sim_provider module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_provider.C12SimProvider"><code class="docutils literal notranslate"><span class="pre">C12SimProvider</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_provider.C12SimProvider.backends"><code class="docutils literal notranslate"><span class="pre">C12SimProvider.backends()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_provider.C12SimProvider.get_backend"><code class="docutils literal notranslate"><span class="pre">C12SimProvider.get_backend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.c12sim_provider.C12SimProvider.user_configs"><code class="docutils literal notranslate"><span class="pre">C12SimProvider.user_configs</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#module-c12_callisto_clients.qiskit_back.exceptions">c12_callisto_clients.qiskit_back.exceptions module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.exceptions.C12SimApiError"><code class="docutils literal notranslate"><span class="pre">C12SimApiError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#c12_callisto_clients.qiskit_back.exceptions.C12SimJobError"><code class="docutils literal notranslate"><span class="pre">C12SimJobError</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="c12_callisto_clients.qiskit_back.html#module-c12_callisto_clients.qiskit_back">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+</section>
+<section id="module-c12_callisto_clients.user_configs">
+<span id="c12-callisto-clients-user-configs-module"></span><h2>c12_callisto_clients.user_configs module<a class="headerlink" href="#module-c12_callisto_clients.user_configs" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="c12_callisto_clients.user_configs.UserConfigs">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">c12_callisto_clients.user_configs.</span></span><span class="sig-name descname"><span class="pre">UserConfigs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_env_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'&lt;object</span> <span class="pre">object&gt;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_env_file_encoding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_env_nested_delimiter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_secrets_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#c12_callisto_clients.user_configs.UserConfigs" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseSettings</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="c12_callisto_clients.user_configs.UserConfigs.token">
+<span class="sig-name descname"><span class="pre">token</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#c12_callisto_clients.user_configs.UserConfigs.token" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="c12_callisto_clients.user_configs.UserConfigs.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#c12_callisto_clients.user_configs.UserConfigs.verbose" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-c12_callisto_clients">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-c12_callisto_clients" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, C12 Quantum Electronics
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">c12_callisto_clients package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-c12_callisto_clients.user_configs">c12_callisto_clients.user_configs module</a><ul>
+<li><a class="reference internal" href="#c12_callisto_clients.user_configs.UserConfigs"><code class="docutils literal notranslate"><span class="pre">UserConfigs</span></code></a><ul>
+<li><a class="reference internal" href="#c12_callisto_clients.user_configs.UserConfigs.token"><code class="docutils literal notranslate"><span class="pre">UserConfigs.token</span></code></a></li>
+<li><a class="reference internal" href="#c12_callisto_clients.user_configs.UserConfigs.verbose"><code class="docutils literal notranslate"><span class="pre">UserConfigs.verbose</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-c12_callisto_clients">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=20623aea"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=32e29ea5"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>

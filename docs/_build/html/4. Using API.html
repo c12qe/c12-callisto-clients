@@ -1,0 +1,537 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Getting the mid-circuit states" href="5.%20Getting%20mid%20circuit%20states.html" /><link rel="prev" title="Working with jobs" href="3.%20Working_with_jobs.html" />
+
+    <link rel="shortcut icon" href="_static/favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+        <title>Using the API to run the emulation - CALLISTO 2.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=37c8b8a1" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  --color-brand-primary: #3A3938;
+  --color-brand-content: #D6A018;
+  --color-brand-visited: #A09D98;
+  --font-stack: Formular, Cardone Micro Trial, Inconsolata, monospace;
+  --font-stack--monospace: Fira Code, Courier, monospace;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #C6E5E1;
+  --color-brand-content: #D6A018;
+  --color-brand-visited: #A09D98;
+  --font-stack: Formular, Cardone Micro Trial, Inconsolata, monospace;
+  --font-stack--monospace: Fira Code, Courier, monospace;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #C6E5E1;
+  --color-brand-content: #D6A018;
+  --color-brand-visited: #A09D98;
+  --font-stack: Formular, Cardone Micro Trial, Inconsolata, monospace;
+  --font-stack--monospace: Fira Code, Courier, monospace;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<div class="announcement">
+  <aside class="announcement-content">
+     We're pleased to announce that <bold>CALLISTO 0.0.6</bold> is now released! 
+  </aside>
+</div>
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">CALLISTO 2.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="_static/logo_black.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="_static/logo_white.svg" alt="Dark Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">CALLISTO 2.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.%20README.html">Callisto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.%20Short_introduction_to_Qiskit.html">Qiskit basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.%20Using_the_C12_emulator.html">Using the C12 emulator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3.%20Working_with_jobs.html">Working with jobs</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Using the API to run the emulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5.%20Getting%20mid%20circuit%20states.html">Getting the mid-circuit states</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6.%20Physical%20parameters%20of%20the%20system.html">Physical parameters of the C12 system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7.%20Tket%20backend.html">Callisto tket framework</a></li>
+</ul>
+
+</div>
+</div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    Version: latest
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    
+    <dl>
+      <dt>Languages</dt>
+        
+          <dd><a href="/index.html">en</a></dd>
+        
+    </dl>
+    
+    
+    <dl>
+      <dt>Versions</dt>
+      
+        <dd><a href="/index.html">latest</a></dd>
+      
+        <dd><a href="0.0.6/en/index.html">0.0.6</a></dd>
+      
+        <dd><a href="2.1.0/en/index.html">2.1.0</a></dd>
+      
+    </dl>
+    
+    <br>
+    </dl>
+  </div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="Using-the-API-to-run-the-emulation">
+<h1>Using the API to run the emulation<a class="headerlink" href="#Using-the-API-to-run-the-emulation" title="Link to this heading">#</a></h1>
+<p>We use a strongly defined HTTP API protocol to communicate with a C12 backend (get and receive the data). This tutorial will briefly present basic API calls that can be used for communication with the C12 backend. Our APIs are the low-level access to our emulator, and could be made compatible with other quantum computer frameworks and interfaces.</p>
+<p>To run each API, we need to pass the unique bearer token that will be used to verify the user’s right to access C12’s system.</p>
+<p>For communication with C12’s system, it is possible to use the API library that encapsulates the HTTP communication with the C12 system using the Python request module.</p>
+<p>To start using it, we need to create an instance of the Request class, as shown in the following code snippet.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Installing the c12simulator-clients package (for more details see jupyter 1)</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">c12_callisto_clients.api.client</span> <span class="kn">import</span> <span class="n">Request</span>
+
+<span class="n">TOKEN</span> <span class="o">=</span> <span class="s2">&quot;1a509cf4-38f5-4de2-b29c-368c21e0f852&quot;</span>
+
+
+<span class="c1"># Create the request instance</span>
+<span class="c1"># Constructor of the Request class also accepts the verbose parameter, which can be use for more detailed output of the methods.</span>
+
+<span class="n">request</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">auth_token</span><span class="o">=</span><span class="n">TOKEN</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="Run-the-simulation">
+<h2>Run the simulation<a class="headerlink" href="#Run-the-simulation" title="Link to this heading">#</a></h2>
+<p>The method <code class="docutils literal notranslate"><span class="pre">start_job()</span></code> is used to start the simulation. It has the following arguments: - <code class="docutils literal notranslate"><span class="pre">qasm_str</span></code>: QASM string with quantum circuit - <code class="docutils literal notranslate"><span class="pre">shots</span></code>: Number of trials for the simulation - <code class="docutils literal notranslate"><span class="pre">result</span></code>: what is desired output (statevector, counts, density_matrix) - <code class="docutils literal notranslate"><span class="pre">backend_name</span></code>: the name of the backend to run on</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+
+<span class="n">qasm_str</span> <span class="o">=</span> <span class="n">circuit</span><span class="o">.</span><span class="n">qasm</span><span class="p">()</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">start_job</span><span class="p">(</span>
+    <span class="n">qasm_str</span><span class="o">=</span><span class="n">qasm_str</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="s2">&quot;density_matrix&quot;</span><span class="p">,</span> <span class="n">backend_name</span><span class="o">=</span><span class="s2">&quot;c12sim-iswap&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># The function returns the UUID and QasmStr of started job or HTTP error in case of problems</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="n">job_uuid</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&#39;176f1988-e3a8-4b8b-8323-a4684d62943a&#39;, &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;)
+</pre></div></div>
+</div>
+<section id="Get-the-results-of-a-simulation">
+<h3>Get the results of a simulation<a class="headerlink" href="#Get-the-results-of-a-simulation" title="Link to this heading">#</a></h3>
+<p>To get the emulation results, we can use the <code class="docutils literal notranslate"><span class="pre">get_job_result()</span></code> method that accepts one mandatory argument (job UUID string) and two optional ones. - <code class="docutils literal notranslate"><span class="pre">timeout</span></code>, which represents the number of seconds that the function will wait for job completion - <code class="docutils literal notranslate"><span class="pre">wait</span></code>, number of seconds between each check if the job is finished</p>
+<p>If we do not specify a timeout argument the function will run until the result is obtained</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">job_result</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_job_result</span><span class="p">(</span><span class="n">job_uuid</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">job_result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;status&#39;: &#39;FINISHED&#39;, &#39;results&#39;: {&#39;density_matrix&#39;: [[&#39;(0.4990637768053288+1.3551869826774539e-21j)&#39;, &#39;(0.00010967621893653856+0.0001964744471174757j)&#39;, &#39;(-1.2293983629452221e-05+0.0002125517091276997j)&#39;, &#39;(0.4983895890488784-0.00020246473017107892j)&#39;], [&#39;(0.00010967621893652468-0.00019647444711747572j)&#39;, &#39;(0.0006796467390991628-2.032942735425706e-21j)&#39;, &#39;(5.139379161905877e-05+4.017392210456757e-05j)&#39;, &#39;(1.3313268045392346e-05-3.129665779283896e-05j)&#39;], [&#39;(-1.2293983629424465e-05-0.0002125517091276997j)&#39;, &#39;(5.139379161905877e-05-4.017392210456757e-05j)&#39;, &#39;(0.0010610935097781216+1.3551890535914957e-21j)&#39;, &#39;(7.144323329608127e-05+0.00012217004103256572j)&#39;], [&#39;(0.4983895890488784+0.00020246473017107892j)&#39;, &#39;(1.3313268045378468e-05+3.129665779283896e-05j)&#39;, &#39;(7.144323329606739e-05-0.00012217004103256575j)&#39;, &#39;(0.4991954829457991-2.0329406645084996e-21j)&#39;]]}, &#39;errors&#39;: &#39;&#39;}
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Get-the-status-of-the-job">
+<h2>Get the status of the job<a class="headerlink" href="#Get-the-status-of-the-job" title="Link to this heading">#</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">status</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_job_status</span><span class="p">(</span><span class="n">job_uuid</span><span class="o">=</span><span class="n">job_uuid</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+finished
+</pre></div></div>
+</div>
+</section>
+<section id="Get-all-jobs">
+<h2>Get all jobs<a class="headerlink" href="#Get-all-jobs" title="Link to this heading">#</a></h2>
+<p>Method <code class="docutils literal notranslate"><span class="pre">get_user_jobs()</span></code> can be used for obtaining information about all the jobs that have been run on the system for the user whose token is passed to the Request instance.</p>
+<p>The method has two arguments: - <code class="docutils literal notranslate"><span class="pre">limit</span></code>: an integer that represents the number of results to obtain - <code class="docutils literal notranslate"><span class="pre">offset</span></code>: an integer that represents the offset from the first result</p>
+<p>Using these two values, one can obtain the pagination, where the offset represents a page and limits the number of results per page. Method returns an array with results.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">number_of_results</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Limit parameter, number of records to retrieve</span>
+<span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">count</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">jobs</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_user_jobs</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">number_of_results</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">count</span><span class="si">:}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">jobs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">number_of_results</span><span class="p">:</span>
+        <span class="k">break</span>
+
+    <span class="n">offset</span> <span class="o">+=</span> <span class="n">number_of_results</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1
+{&#39;uuid&#39;: &#39;a7fadc44-22f7-42a1-9056-cd05f510a279&#39;, &#39;time&#39;: &#39;2023-09-19T15:37:51.654241&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 10000, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;4&#39;, &#39;result&#39;: &#39;4&#39;}
+2
+{&#39;uuid&#39;: &#39;7b646f18-198d-40d7-a3f1-cb87cb6cc7a7&#39;, &#39;time&#39;: &#39;2023-09-19T15:38:08.722888&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 10000, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;1&#39;, &#39;result&#39;: &#39;8&#39;}
+3
+{&#39;uuid&#39;: &#39;c62fe639-e53a-49ec-bc15-c0d7284d723a&#39;, &#39;time&#39;: &#39;2023-09-19T15:40:06.249481&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 10000, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;3&#39;, &#39;result&#39;: &#39;9&#39;}
+4
+{&#39;uuid&#39;: &#39;56497e19-2105-484f-a6e6-23f29445030e&#39;, &#39;time&#39;: &#39;2023-09-19T15:40:16.657476&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 10000, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nrz(-pi) q[0];\nrz(-pi) q[1];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(-pi/2) q[1];\nry(pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[1];\nh q[0];\nx q[1];\nx q[0];\ncz q[0],q[1];\nx q[0];\nx q[1];\nh q[0];\nh q[1];\nz q[0];\nz q[1];\ncz q[0],q[1];\nh q[0];\nh q[1];\n&#39;, &#39;errors&#39;: &#39;1&#39;, &#39;result&#39;: &#39;9&#39;}
+5
+{&#39;uuid&#39;: &#39;d369dceb-2bf0-42ae-9fc0-eba869e388a2&#39;, &#39;time&#39;: &#39;2023-09-19T15:42:37.525781&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 1024, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;e&#39;, &#39;result&#39;: &#39;b&#39;}
+6
+{&#39;uuid&#39;: &#39;72fc139b-7d58-429a-806d-9030b90fd155&#39;, &#39;time&#39;: &#39;2023-09-19T15:42:41.259799&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 1024, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;9&#39;, &#39;result&#39;: &#39;b&#39;}
+7
+{&#39;uuid&#39;: &#39;0281d8f6-7ba7-49e8-97d7-8e0ee2b6da32&#39;, &#39;time&#39;: &#39;2023-09-19T15:42:49.650467&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 1024, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;f&#39;, &#39;result&#39;: &#39;6&#39;}
+8
+{&#39;uuid&#39;: &#39;259c317d-8a14-433e-a6d0-4595da57bbc8&#39;, &#39;time&#39;: &#39;2023-09-19T15:43:09.545480&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 1024, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;7&#39;, &#39;result&#39;: &#39;d&#39;}
+9
+{&#39;uuid&#39;: &#39;901a0c54-47bd-4caf-9130-dadb11ffc020&#39;, &#39;time&#39;: &#39;2023-09-19T15:43:09.809755&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 1024, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[3];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\nry(-pi/2) q[2];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[3];\nh q[0];\ncx q[0],q[1];\nx q[2];\nh q[2];\n&#39;, &#39;errors&#39;: &#39;5&#39;, &#39;result&#39;: &#39;4&#39;}
+10
+{&#39;uuid&#39;: &#39;41d70035-4510-42a1-b8a9-20128bae359f&#39;, &#39;time&#39;: &#39;2023-09-19T15:45:17.122747&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 100, &#39;result&#39;: &#39;density_matrix&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;3&#39;, &#39;result&#39;: &#39;5&#39;}
+11
+{&#39;uuid&#39;: &#39;80bd125a-09f3-4a54-98c9-7bdad0b8e096&#39;, &#39;time&#39;: &#39;2023-09-19T15:46:02.350335&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 10000, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(pi/2) q[0];\nrx(pi) q[0];\nbarrier q[0],q[1];\nry(pi/2) q[0];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\nbarrier q[0],q[1];\nrx(pi) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\nbarrier q[0],q[1];\ncx q[0],q[1];\nbarrier q[0],q[1];\nx q[1];\n&#39;, &#39;errors&#39;: &#39;5&#39;, &#39;result&#39;: &#39;a&#39;}
+12
+{&#39;uuid&#39;: &#39;ffb8e2ff-307a-4f02-8063-13b950a8dafe&#39;, &#39;time&#39;: &#39;2023-09-19T15:55:53.406347&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 1024, &#39;result&#39;: &#39;counts,statevector,density_matrix&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\n\nqreg q[2];\nx q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;f&#39;, &#39;result&#39;: &#39;f&#39;}
+13
+{&#39;uuid&#39;: &#39;d8687ad0-29d4-4b37-b55a-beda3373dbb5&#39;, &#39;time&#39;: &#39;2023-09-20T08:17:01.707796&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 10000, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;d&#39;, &#39;result&#39;: &#39;0&#39;}
+14
+{&#39;uuid&#39;: &#39;d962bed0-9893-4995-ab59-8cda94b3e238&#39;, &#39;time&#39;: &#39;2023-09-20T08:17:17.385394&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 10000, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nrz(-pi) q[0];\nrz(-pi) q[1];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(-pi/2) q[1];\nry(pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[1];\nh q[0];\nx q[1];\nx q[0];\ncz q[0],q[1];\nx q[0];\nx q[1];\nh q[0];\nh q[1];\nz q[0];\nz q[1];\ncz q[0],q[1];\nh q[0];\nh q[1];\n&#39;, &#39;errors&#39;: &#39;d&#39;, &#39;result&#39;: &#39;0&#39;}
+15
+{&#39;uuid&#39;: &#39;98a54d07-353b-42c4-ae20-b95a63fbe8ea&#39;, &#39;time&#39;: &#39;2023-09-20T08:17:36.466371&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 1024, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;0&#39;, &#39;result&#39;: &#39;7&#39;}
+16
+{&#39;uuid&#39;: &#39;b96ada11-0cb8-4ba3-a6a0-8169fe233ce5&#39;, &#39;time&#39;: &#39;2023-09-20T08:17:40.278305&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 1024, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;1&#39;, &#39;result&#39;: &#39;1&#39;}
+17
+{&#39;uuid&#39;: &#39;c83e9dd9-474a-489a-b6f2-af372304eb28&#39;, &#39;time&#39;: &#39;2023-09-20T08:17:49.885408&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 1024, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;d&#39;, &#39;result&#39;: &#39;9&#39;}
+18
+{&#39;uuid&#39;: &#39;87cf6476-5366-4b97-be21-b038525e1b56&#39;, &#39;time&#39;: &#39;2023-09-20T08:18:07.597540&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 1024, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;7&#39;, &#39;result&#39;: &#39;6&#39;}
+19
+{&#39;uuid&#39;: &#39;aa55dc98-b662-452c-b45b-15ff4145d066&#39;, &#39;time&#39;: &#39;2023-09-20T08:18:07.705100&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 1024, &#39;result&#39;: &#39;counts,statevector&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[3];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\nry(-pi/2) q[2];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[3];\nh q[0];\ncx q[0],q[1];\nx q[2];\nh q[2];\n&#39;, &#39;errors&#39;: &#39;9&#39;, &#39;result&#39;: &#39;8&#39;}
+20
+{&#39;uuid&#39;: &#39;176f1988-e3a8-4b8b-8323-a4684d62943a&#39;, &#39;time&#39;: &#39;2023-09-20T08:18:20.655037&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 100, &#39;result&#39;: &#39;density_matrix&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;8&#39;, &#39;result&#39;: &#39;8&#39;}
+</pre></div></div>
+</div>
+</section>
+<section id="Get-information-about-a-specific-job">
+<h2>Get information about a specific job<a class="headerlink" href="#Get-information-about-a-specific-job" title="Link to this heading">#</a></h2>
+<p>Using the method <code class="docutils literal notranslate"><span class="pre">get_job()</span></code> it is possible to retrieve the information about the specific job with a given UUID.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">job_data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_job</span><span class="p">(</span><span class="n">job_uuid</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">job_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;uuid&#39;: &#39;176f1988-e3a8-4b8b-8323-a4684d62943a&#39;, &#39;time&#39;: &#39;2023-09-20T08:18:20.655037&#39;, &#39;status&#39;: &#39;finished&#39;, &#39;options&#39;: {&#39;shots&#39;: 100, &#39;result&#39;: &#39;density_matrix&#39;, &#39;basis&#39;: &#39;iswap&#39;}, &#39;task&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\ngate iswap q0,q1 { s q0; s q1; h q0; cx q0,q1; cx q1,q0; h q1; }\nqreg q[2];\nry(-pi/2) q[1];\niswap q[0],q[1];\nrx(pi) q[0];\nry(-pi/2) q[1];\niswap q[0],q[1];\nry(-pi/2) q[0];\nrz(-pi/2) q[0];\nrz(pi/2) q[1];\nry(-pi/2) q[1];\n&#39;, &#39;task_orig&#39;: &#39;OPENQASM 2.0;\ninclude &#34;qelib1.inc&#34;;\nqreg q[2];\nh q[0];\ncx q[0],q[1];\n&#39;, &#39;errors&#39;: &#39;&#39;, &#39;result&#39;: {&#39;statevector&#39;: [&#39;(0.4990637768053288+1.3551869826774539e-21j)&#39;, &#39;(0.0006796467390991628-2.032942735425706e-21j)&#39;, &#39;(0.0010610935097781216+1.3551890535914957e-21j)&#39;, &#39;(0.4991954829457991-2.0329406645084996e-21j)&#39;], &#39;density_matrix&#39;: [[&#39;(0.4990637768053288+1.3551869826774539e-21j)&#39;, &#39;(0.00010967621893653856+0.0001964744471174757j)&#39;, &#39;(-1.2293983629452221e-05+0.0002125517091276997j)&#39;, &#39;(0.4983895890488784-0.00020246473017107892j)&#39;], [&#39;(0.00010967621893652468-0.00019647444711747572j)&#39;, &#39;(0.0006796467390991628-2.032942735425706e-21j)&#39;, &#39;(5.139379161905877e-05+4.017392210456757e-05j)&#39;, &#39;(1.3313268045392346e-05-3.129665779283896e-05j)&#39;], [&#39;(-1.2293983629424465e-05-0.0002125517091276997j)&#39;, &#39;(5.139379161905877e-05-4.017392210456757e-05j)&#39;, &#39;(0.0010610935097781216+1.3551890535914957e-21j)&#39;, &#39;(7.144323329608127e-05+0.00012217004103256572j)&#39;], [&#39;(0.4983895890488784+0.00020246473017107892j)&#39;, &#39;(1.3313268045378468e-05+3.129665779283896e-05j)&#39;, &#39;(7.144323329606739e-05-0.00012217004103256575j)&#39;, &#39;(0.4991954829457991-2.0329406645084996e-21j)&#39;]], &#39;counts&#39;: {&#39;00&#39;: 46, &#39;11&#39;: 54}, &#39;states&#39;: {&#39;density_matrix&#39;: {}, &#39;statevector&#39;: {}}}}
+</pre></div></div>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="5.%20Getting%20mid%20circuit%20states.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Getting the mid-circuit states</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="3.%20Working_with_jobs.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Working with jobs</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, C12 Quantum Electronics
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Using the API to run the emulation</a><ul>
+<li><a class="reference internal" href="#Run-the-simulation">Run the simulation</a><ul>
+<li><a class="reference internal" href="#Get-the-results-of-a-simulation">Get the results of a simulation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Get-the-status-of-the-job">Get the status of the job</a></li>
+<li><a class="reference internal" href="#Get-all-jobs">Get all jobs</a></li>
+<li><a class="reference internal" href="#Get-information-about-a-specific-job">Get information about a specific job</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=20623aea"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=32e29ea5"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>

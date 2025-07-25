@@ -1,0 +1,634 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Using the API to run the emulation" href="4.%20Using%20API.html" /><link rel="prev" title="Using the C12 emulator" href="2.%20Using_the_C12_emulator.html" />
+
+    <link rel="shortcut icon" href="_static/favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+        <title>Working with jobs - CALLISTO 2.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=37c8b8a1" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  --color-brand-primary: #3A3938;
+  --color-brand-content: #D6A018;
+  --color-brand-visited: #A09D98;
+  --font-stack: Formular, Cardone Micro Trial, Inconsolata, monospace;
+  --font-stack--monospace: Fira Code, Courier, monospace;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #C6E5E1;
+  --color-brand-content: #D6A018;
+  --color-brand-visited: #A09D98;
+  --font-stack: Formular, Cardone Micro Trial, Inconsolata, monospace;
+  --font-stack--monospace: Fira Code, Courier, monospace;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #C6E5E1;
+  --color-brand-content: #D6A018;
+  --color-brand-visited: #A09D98;
+  --font-stack: Formular, Cardone Micro Trial, Inconsolata, monospace;
+  --font-stack--monospace: Fira Code, Courier, monospace;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<div class="announcement">
+  <aside class="announcement-content">
+     We're pleased to announce that <bold>CALLISTO 0.0.6</bold> is now released! 
+  </aside>
+</div>
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">CALLISTO 2.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="_static/logo_black.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="_static/logo_white.svg" alt="Dark Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">CALLISTO 2.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.%20README.html">Callisto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.%20Short_introduction_to_Qiskit.html">Qiskit basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.%20Using_the_C12_emulator.html">Using the C12 emulator</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Working with jobs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4.%20Using%20API.html">Using the API to run the emulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5.%20Getting%20mid%20circuit%20states.html">Getting the mid-circuit states</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6.%20Physical%20parameters%20of%20the%20system.html">Physical parameters of the C12 system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7.%20Tket%20backend.html">Callisto tket framework</a></li>
+</ul>
+
+</div>
+</div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    Version: latest
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    
+    <dl>
+      <dt>Languages</dt>
+        
+          <dd><a href="/index.html">en</a></dd>
+        
+    </dl>
+    
+    
+    <dl>
+      <dt>Versions</dt>
+      
+        <dd><a href="/index.html">latest</a></dd>
+      
+        <dd><a href="0.0.6/en/index.html">0.0.6</a></dd>
+      
+        <dd><a href="2.1.0/en/index.html">2.1.0</a></dd>
+      
+    </dl>
+    
+    <br>
+    </dl>
+  </div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="Working-with-jobs">
+<h1>Working with jobs<a class="headerlink" href="#Working-with-jobs" title="Link to this heading">#</a></h1>
+<p>The job class obtained after running a QuantumCircuit has interesting properties that can be used.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">c12_callisto_clients.user_configs</span> <span class="kn">import</span> <span class="n">UserConfigs</span>
+<span class="kn">from</span> <span class="nn">c12_callisto_clients.qiskit_back.c12sim_provider</span> <span class="kn">import</span> <span class="n">C12SimProvider</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span>
+<span class="n">TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;C12_TOKEN&quot;</span><span class="p">)</span>
+<span class="n">configs</span> <span class="o">=</span> <span class="n">UserConfigs</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">({</span><span class="s2">&quot;token&quot;</span> <span class="p">:</span> <span class="n">TOKEN</span><span class="p">})</span>
+
+<span class="n">c12_simulator_provider</span> <span class="o">=</span> <span class="n">C12SimProvider</span><span class="p">(</span><span class="n">configs</span><span class="p">)</span>
+<span class="n">c12_simulator_backend</span> <span class="o">=</span> <span class="n">c12_simulator_provider</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;c12sim-iswap&#39;</span><span class="p">)</span>
+
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">     ┌───┐
+q_0: ┤ H ├──■──
+     └───┘┌─┴─┐
+q_1: ─────┤ X ├
+          └───┘</pre></div>
+</div>
+<p>Two main methods available for each Job instance are job_id() and status().</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">job_id()</span></code> method returns the unique identifier of a job as a UUID4 string (a universally unique identifier (UUID), version 4, is a 36-character alphanumeric random generated string). This id can be used for later assessment of the job properties.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">status()</span></code> method is used to get the status of a job execution as an instance of JobStatus class. Available statuses are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">QUEUED</span></code> = Job is queued. It waits for execution</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RUNNING</span></code> = Job is currently running.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CANCELLED</span></code> = Job has been canceled.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DONE</span></code> = Job has been successfully done.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ERROR</span></code> = There has been an error during the execution of a job.</p></li>
+</ul>
+</li>
+</ol>
+<p>The status of a running job can be changed depending on the current state of job execution.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c12_job</span> <span class="o">=</span> <span class="n">c12_simulator_backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Job id: </span><span class="si">{</span><span class="n">c12_job</span><span class="o">.</span><span class="n">job_id</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># Get a job UUID</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Status: </span><span class="si">{</span><span class="n">c12_job</span><span class="o">.</span><span class="n">status</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Get a current job status</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Job id: 023e408a-bb92-4f48-a5c5-2336bcc8b21e
+Status: JobStatus.RUNNING
+</pre></div></div>
+</div>
+<p>The result of a job execution can be obtained with the <code class="docutils literal notranslate"><span class="pre">result()</span></code> method. This method can have one optional argument (timeout). The <code class="docutils literal notranslate"><span class="pre">timeout</span></code> argument specifies how long the method will wait for the execution of the task. If the time limit is exceeded, the <code class="docutils literal notranslate"><span class="pre">C12SimJobError</span></code> exception is raised. If we do not specify this argument, its default value is None, meaning the method will block until the simulation is finished.</p>
+<p>Another way to get the results is to check the job status periodically until it is <code class="docutils literal notranslate"><span class="pre">DONE</span></code> and then call the <code class="docutils literal notranslate"><span class="pre">result()</span></code> function.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit.providers</span> <span class="kn">import</span> <span class="n">JobStatus</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="n">job_final_states</span> <span class="o">=</span> <span class="p">[</span><span class="n">JobStatus</span><span class="o">.</span><span class="n">DONE</span><span class="p">,</span> <span class="n">JobStatus</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span> <span class="n">JobStatus</span><span class="o">.</span><span class="n">CANCELLED</span><span class="p">]</span>
+<span class="n">c12_job_id</span> <span class="o">=</span> <span class="n">c12_job</span><span class="o">.</span><span class="n">job_id</span><span class="p">()</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">job_status</span> <span class="o">=</span> <span class="n">c12_job</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">c12_job_id</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">job_status</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">job_status</span> <span class="ow">in</span> <span class="n">job_final_states</span><span class="p">:</span>
+        <span class="k">break</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># Wait 5 s</span>
+
+<span class="k">if</span> <span class="n">c12_job</span><span class="o">.</span><span class="n">status</span><span class="p">()</span> <span class="o">==</span> <span class="n">JobStatus</span><span class="o">.</span><span class="n">DONE</span><span class="p">:</span>
+    <span class="n">c12_result</span> <span class="o">=</span> <span class="n">c12_job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">c12_result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+023e408a-bb92-4f48-a5c5-2336bcc8b21e: JobStatus.RUNNING
+023e408a-bb92-4f48-a5c5-2336bcc8b21e: JobStatus.DONE
+{&#39;00&#39;: 487, &#39;01&#39;: 1, &#39;10&#39;: 2, &#39;11&#39;: 534}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Running a job that will block until finished</span>
+<span class="n">c12_job</span> <span class="o">=</span> <span class="n">c12_simulator_backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="n">c12_result</span> <span class="o">=</span> <span class="n">c12_job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">c12_job</span><span class="o">.</span><span class="n">status</span><span class="p">()</span> <span class="o">==</span> <span class="n">JobStatus</span><span class="o">.</span><span class="n">DONE</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">c12_result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;00&#39;: 517, &#39;01&#39;: 2, &#39;10&#39;: 1, &#39;11&#39;: 504}
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Getting a job result with a timeout argument specified</span>
+<span class="kn">from</span> <span class="nn">c12simulator_clients.qiskit_back.exceptions</span> <span class="kn">import</span> <span class="n">C12SimJobError</span>
+<span class="n">c12_job</span> <span class="o">=</span> <span class="n">c12_simulator_backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">c12_result</span> <span class="o">=</span> <span class="n">c12_job</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span> <span class="c1"># it will raise a C12SimJobError as it won&#39;t be finished in 15s</span>
+<span class="k">except</span> <span class="n">C12SimJobError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Timeout!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; Last status: </span><span class="si">{</span><span class="n">c12_job</span><span class="o">.</span><span class="n">status</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="Getting-previous-jobs">
+<h2>Getting previous jobs<a class="headerlink" href="#Getting-previous-jobs" title="Link to this heading">#</a></h2>
+<p>Next, an extremely useful functionality is the possibility to obtain all jobs run on the system by a specific user. Using this functionality, the user can get the results of old jobs.</p>
+<p>This can be achieved by calling the <code class="docutils literal notranslate"><span class="pre">jobs()</span></code> function on the backend instance. This function accepts two arguments: <code class="docutils literal notranslate"><span class="pre">limit</span></code> and <code class="docutils literal notranslate"><span class="pre">offset</span></code>. We can specify how many jobs we want to get with a <code class="docutils literal notranslate"><span class="pre">limit</span></code> argument. Likewise, we can set the <code class="docutils literal notranslate"><span class="pre">offset</span></code> from the first job with an offset argument. With these arguments, pagination is easily achieved.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">number_of_records</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">jobs</span> <span class="o">=</span> <span class="n">c12_simulator_backend</span><span class="o">.</span><span class="n">jobs</span><span class="p">(</span><span class="n">number_of_records</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">counter</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">job_id</span><span class="p">()</span><span class="si">}</span><span class="s2"> Status: </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">status</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+<br/><br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1: a7fadc44-22f7-42a1-9056-cd05f510a279 Status: JobStatus.DONE
+2: 7b646f18-198d-40d7-a3f1-cb87cb6cc7a7 Status: JobStatus.DONE
+3: c62fe639-e53a-49ec-bc15-c0d7284d723a Status: JobStatus.DONE
+4: 56497e19-2105-484f-a6e6-23f29445030e Status: JobStatus.DONE
+5: d369dceb-2bf0-42ae-9fc0-eba869e388a2 Status: JobStatus.DONE
+6: 72fc139b-7d58-429a-806d-9030b90fd155 Status: JobStatus.DONE
+7: 0281d8f6-7ba7-49e8-97d7-8e0ee2b6da32 Status: JobStatus.DONE
+8: 259c317d-8a14-433e-a6d0-4595da57bbc8 Status: JobStatus.DONE
+9: 901a0c54-47bd-4caf-9130-dadb11ffc020 Status: JobStatus.DONE
+10: 41d70035-4510-42a1-b8a9-20128bae359f Status: JobStatus.DONE
+</pre></div></div>
+</div>
+<p>For each job, it is possible to get the circuit sent to the simulator for execution. But, it is even possible to get the transpiled version of this circuit to see what the circuit has been run after the transpilation process.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Also it is possible to retrieve the circuit that has been run for specific job</span>
+<span class="n">first_job</span> <span class="o">=</span> <span class="n">jobs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">first_job_qasm</span> <span class="o">=</span> <span class="n">first_job</span><span class="o">.</span><span class="n">get_qasm</span><span class="p">()</span> <span class="c1"># Get OpenQASM string</span>
+<span class="n">first_job_circuit</span> <span class="o">=</span> <span class="n">first_job</span><span class="o">.</span><span class="n">get_circuit</span><span class="p">()</span>
+<span class="n">first_job_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="_images/3._Working_with_jobs_11_0.png" src="_images/3._Working_with_jobs_11_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Getting the transpiled circuit</span>
+<span class="c1"># NOTICE: It can be possible that due to a bug in Qiskit&#39;s transpile function some circuits are wrongly converted to QASM string</span>
+
+<span class="n">first_job_transpiled_qasm</span> <span class="o">=</span> <span class="n">first_job</span><span class="o">.</span><span class="n">get_qasm</span><span class="p">(</span><span class="n">transpiled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># Get transpiled OpenQASM string</span>
+<span class="n">first_job_transpiled_circuit</span> <span class="o">=</span> <span class="n">first_job</span><span class="o">.</span><span class="n">get_circuit</span><span class="p">(</span><span class="n">transpiled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">first_job_transpiled_circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s1">&#39;mpl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="_images/3._Working_with_jobs_12_0.png" src="_images/3._Working_with_jobs_12_0.png" />
+</div>
+</div>
+</section>
+<section id="Query-job-by-UUID">
+<h2>Query job by UUID<a class="headerlink" href="#Query-job-by-UUID" title="Link to this heading">#</a></h2>
+<p>Jobs can be searched by their UUID using the <code class="docutils literal notranslate"><span class="pre">get_job()</span></code> method.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Jobs can be queried by theirs UUID</span>
+<span class="n">job_uuid</span> <span class="o">=</span> <span class="n">first_job</span><span class="o">.</span><span class="n">job_id</span><span class="p">()</span>
+<span class="n">search_job</span> <span class="o">=</span> <span class="n">c12_simulator_backend</span><span class="o">.</span><span class="n">get_job</span><span class="p">(</span><span class="n">job_uuid</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Job id : </span><span class="si">{</span><span class="n">search_job</span><span class="o">.</span><span class="n">job_id</span><span class="p">()</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">search_job</span><span class="o">.</span><span class="n">status</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Job id : 7b646f18-198d-40d7-a3f1-cb87cb6cc7a7 JobStatus.DONE
+</pre></div></div>
+</div>
+</section>
+<section id="Running-multiple-jobs-at-once">
+<h2>Running multiple jobs at once<a class="headerlink" href="#Running-multiple-jobs-at-once" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">run()</span></code> method of the backend class can also accept the list of QuantumCircuit. This can be an essential feature as it allows a user to run multiple circuits simultaneously and get an array of job instances as a result.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Array where the circuits will be stored</span>
+<span class="n">circuits_to_run</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># Creating the circuits</span>
+<span class="n">circuit_1</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">circuit_1</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit_1</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">circuit_2</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">circuit_2</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit_2</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit_2</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">circuit_2</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">circuits_to_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit_1</span><span class="p">)</span>
+<span class="n">circuits_to_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">circuit_2</span><span class="p">)</span>
+
+<span class="c1"># Running the jobs</span>
+<span class="n">c12_jobs</span> <span class="o">=</span> <span class="n">c12_simulator_backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuits_to_run</span><span class="p">)</span>
+
+<span class="c1"># Printing the UUID of the jobs</span>
+<span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">c12_jobs</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Job id: </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">job_id</span><span class="p">()</span><span class="si">}</span><span class="s2"> - &gt;  </span><span class="si">{</span><span class="n">job</span><span class="o">.</span><span class="n">status</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Waiting for the results</span>
+<span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">c12_jobs</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">get_statevector</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Job id: 87cf6476-5366-4b97-be21-b038525e1b56 - &gt;  JobStatus.RUNNING
+Job id: aa55dc98-b662-452c-b45b-15ff4145d066 - &gt;  JobStatus.RUNNING
+[0.49906378+1.35518698e-21j 0.00067965-2.03294274e-21j
+ 0.00106109+1.35518905e-21j 0.49919548-2.03294066e-21j]
+[0.24953264+6.77595519e-22j 0.00033982-1.01647441e-21j
+ 0.00053055+6.77596554e-22j 0.24959849-1.01647337e-21j
+ 0.24953114+6.77591464e-22j 0.00033982-1.01646833e-21j
+ 0.00053055+6.77592499e-22j 0.24959699-1.01646729e-21j]
+</pre></div></div>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="4.%20Using%20API.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Using the API to run the emulation</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="2.%20Using_the_C12_emulator.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Using the C12 emulator</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, C12 Quantum Electronics
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Working with jobs</a><ul>
+<li><a class="reference internal" href="#Getting-previous-jobs">Getting previous jobs</a></li>
+<li><a class="reference internal" href="#Query-job-by-UUID">Query job by UUID</a></li>
+<li><a class="reference internal" href="#Running-multiple-jobs-at-once">Running multiple jobs at once</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=20623aea"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=32e29ea5"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>
