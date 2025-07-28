@@ -1,6 +1,6 @@
 [project]
 name = "c12_callisto_clients"
-version = "2.1.12"
+version = "2.2.2"
 description = "Different adapters for the access to the C12 Callisto quantum emulator."
 authors = [{name = "C12 Quantum Electronics", email = "dev@c12qe.com"}]
 license = {text = "Proprietary"}
