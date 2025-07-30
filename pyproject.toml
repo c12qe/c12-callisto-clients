@@ -1,28 +1,59 @@
-[tool.poetry]
+[project]
 name = "c12_callisto_clients"
-version = "0.0.1"
-description = ""
-authors = ["C12 Quantum Electronics"]
+version = "2.1.12"
+description = "Different adapters for the access to the C12 Callisto quantum emulator."
+authors = [{name = "C12 Quantum Electronics", email = "dev@c12qe.com"}]
+license = {text = "Proprietary"}
+readme = "README.md"
+requires-python = ">=3.10,<3.12"
+keywords = ["quantum", "emulator", "c12", "callisto", "clients", "pytket"]
+classifiers = [
+    "License :: Other/Proprietary License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Environment :: Console",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = [
+    "pydantic-settings>=2.10",
+    "requests>=2.32",
+    "traitlets>=5.14",
+    "pydantic>=2.9",
+    "qiskit>=1.4, <1.5",
+    "pytket>=1.33,<1.34",
+]
 
-[tool.poetry.dependencies]
-python = "~3.10"
-traitlets = "5.9.0"
-qiskit = "^1.2.4"
-pydantic = "^2.9.2"
-requests = "^2.32.3"
-pydantic-settings = "^2.5.2"
-lark = "^1.2.2"
-pytket = "^1.33.0"
-lark-parser = "^0.12.0"
+[project.optional-dependencies]
+qiskit = ["qiskit>=1.4, <1.5"]
+pytket = ["pytket>=1.33,<1.34"]
+all = ["qiskit>=1.4, <1.5", "pytket>=1.33,<1.34"]
+dev = [
+    "pytest>=7.1.1",
+]
 
-[tool.poetry.dev-dependencies]
-black = {extras = ["d"], version = "^24.3.0"}
-debugpy = {git = "https://github.com/microsoft/debugpy.git", rev = "v1.6.6"}
-pytest = "^7.1.1"
-pre-commit = "^2.18.1"
-coverage = "^6.3.2"
-pylint = "^2.13.5"
-jupyterlab = "^3.3.3"
+[project.urls]
+Homepage = "https://www.c12qe.com"
+Repository = "https://github.com/c12qe/c12simulator-clients"
+Documentation = "https://c12qe.github.io/c12-callisto-clients/"
+Issues = "https://github.com/c12qe/c12simulator-clients/issues"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["c12_callisto_clients*"]
+exclude = ["tests*"]
 
 [tool.black]
 line-length = 100
@@ -48,8 +79,3 @@ testpaths = [
 ]
 python_files = "*_test.py"
 pythonpath = "src"
-
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
