@@ -65,7 +65,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-package-dir = {"" = "src"}
+package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -81,6 +81,7 @@ python_files = "*_test.py"
 pythonpath = "src"
 
 [tool.pyright]
+exclude = ["*.ipynb"]
 include = ["src/c12_callisto_clients"]
 extraPaths = ["src"]
 pythonVersion = "3.10"
@@ -98,6 +99,7 @@ exclude = [
     "dist",
     "__pycache__",
     "*.egg-info",
+    "*.ipynb"
 ]
 
 [tool.ruff.lint]

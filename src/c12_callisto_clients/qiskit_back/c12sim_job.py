@@ -1,16 +1,15 @@
-from typing import Optional, Tuple, List
 from datetime import datetime
+
 import numpy as np
 from qiskit import QuantumCircuit
+from qiskit.providers import BackendV2, JobV1
+from qiskit.providers.jobstatus import JOB_FINAL_STATES, JobStatus
+from qiskit.quantum_info import DensityMatrix, Statevector
 from qiskit.result import Result
-from qiskit.providers import JobV1, BackendV2
-from qiskit.quantum_info import Statevector, DensityMatrix
-from qiskit.providers.jobstatus import JobStatus, JOB_FINAL_STATES
 from qiskit.result.models import ExperimentResult, ExperimentResultData
-from c12_callisto_clients.qiskit_back.exceptions import C12SimApiError, C12SimJobError
-
 
 from c12_callisto_clients.api.exceptions import ApiError
+from c12_callisto_clients.qiskit_back.exceptions import C12SimApiError, C12SimJobError
 
 
 def get_qiskit_status(status: str) -> JobStatus:
@@ -127,9 +126,9 @@ class C12SimJob(JobV1):
 
     def _wait_for_completion(
         self,
-        timeout: Optional[float] = None,
+        timeout: float | None = None,
         wait: float = 5,
-        required_states: Tuple[JobStatus] = JOB_FINAL_STATES,
+        required_states: tuple[JobStatus] = JOB_FINAL_STATES,
     ) -> bool:
         """
         Wrapper: waiting for the job completion.
@@ -144,16 +143,14 @@ class C12SimJob(JobV1):
             return self._status in required_states
 
         try:
-            result = self._backend.request.get_job_result(
+            self._backend.request.get_job_result(
                 self._job_id,
                 output_data="counts,statevector,states,density_matrix",
                 timeout=timeout,
                 wait=wait,
             )
         except ApiError as err:
-            raise C12SimApiError(
-                "Unexpected error happened during the accessing the remote server"
-            ) from err
+            raise C12SimApiError("Unexpected error happened during the accessing the remote server") from err
         except TimeoutError as err2:
             raise C12SimJobError("Timeout occurred while waiting for job execution") from err2
 
@@ -162,7 +159,7 @@ class C12SimJob(JobV1):
 
         return self._status in required_states
 
-    def error_message(self) -> Optional[str]:
+    def error_message(self) -> str | None:
         """
         Provide details about the reason of a job failure.
 
@@ -180,7 +177,7 @@ class C12SimJob(JobV1):
 
         return self._job_error_msg
 
-    def _parse_result_data(self) -> List[ExperimentResult]:
+    def _parse_result_data(self) -> list[ExperimentResult]:
         """
         Parse result dictionary.
 
@@ -222,12 +219,10 @@ class C12SimJob(JobV1):
 
         return [experiment]
 
-    def result(self, timeout: Optional[float] = None, wait: float = 5):
+    def result(self, timeout: float | None = None, wait: float = 5):
         if not self._wait_for_completion(timeout, wait, required_states=(JobStatus.DONE,)):
             if self._status is JobStatus.CANCELLED:
-                raise C12SimJobError(
-                    f"Unable to retrieve result for job {self._job_id}. Job was cancelled"
-                )
+                raise C12SimJobError(f"Unable to retrieve result for job {self._job_id}. Job was cancelled")
 
             if self._status is JobStatus.ERROR:
                 raise C12SimJobError(
@@ -266,15 +261,13 @@ class C12SimJob(JobV1):
         try:
             status = self._backend.request.get_job_status(self._job_id)
         except ApiError as err:
-            raise C12SimApiError(
-                "Unexpected error happened during the accessing the remote server"
-            ) from err
+            raise C12SimApiError("Unexpected error happened during the accessing the remote server") from err
 
         self._status = get_qiskit_status(status)
 
         return self._status
 
-    def get_qasm(self, transpiled: bool = False) -> Optional[str]:
+    def get_qasm(self, transpiled: bool = False) -> str | None:
         """
         Method returns the qasm string for a given job.
 
@@ -286,13 +279,9 @@ class C12SimJob(JobV1):
             return self.metadata["metadata"]["qasm"]
         else:
             # Added for some backward compatibility
-            return (
-                self.metadata["metadata"]["qasm_orig"]
-                if "qasm_orig" in self.metadata["metadata"]
-                else None
-            )
+            return self.metadata["metadata"]["qasm_orig"] if "qasm_orig" in self.metadata["metadata"] else None
 
-    def get_circuit(self, transpiled: bool = False) -> Optional[QuantumCircuit]:
+    def get_circuit(self, transpiled: bool = False) -> QuantumCircuit | None:
         """
         Method return QuantumCircuit object for a given job.
 
@@ -304,7 +293,7 @@ class C12SimJob(JobV1):
 
         return QuantumCircuit.from_qasm_str(qasm_str)
 
-    def get_mid_statevector(self, barrier: int) -> Optional[Statevector]:
+    def get_mid_statevector(self, barrier: int) -> Statevector | None:
         """
         Function to get the mid-circuit statevector (if any).
 
@@ -325,7 +314,7 @@ class C12SimJob(JobV1):
 
         return Statevector(result_data[f"sv{barrier}"])
 
-    def get_mid_density_matrix(self, barrier: int) -> Optional[DensityMatrix]:
+    def get_mid_density_matrix(self, barrier: int) -> DensityMatrix | None:
         """
         Function to get the mid-circuit density matrix (if any).
 

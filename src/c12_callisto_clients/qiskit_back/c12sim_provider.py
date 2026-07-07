@@ -1,10 +1,10 @@
-from typing import Union, List
-from qiskit.providers.provider import ProviderV1
 from qiskit.providers.exceptions import QiskitBackendNotFoundError
+from qiskit.providers.provider import ProviderV1
+
 from c12_callisto_clients.api.client import Request
+from c12_callisto_clients.api.exceptions import ApiError
 from c12_callisto_clients.qiskit_back.c12sim_backend import C12SimBackend
 from c12_callisto_clients.qiskit_back.exceptions import C12SimApiError
-from c12_callisto_clients.api.exceptions import ApiError
 from c12_callisto_clients.user_configs import UserConfigs
 
 
@@ -25,7 +25,7 @@ class C12SimProvider(ProviderV1):
     def user_configs(self):
         return self._user_configs
 
-    def backends(self, name=None, **kwargs) -> List[str]:
+    def backends(self, name=None, **kwargs) -> list[str]:
         """
         Return all available backends for the current user.
 
@@ -43,11 +43,9 @@ class C12SimProvider(ProviderV1):
         except PermissionError:
             return []
         except ApiError as api_err:
-            raise C12SimApiError(
-                "Unexpected error happened during the accessing the remote server"
-            ) from api_err
+            raise C12SimApiError("Unexpected error happened during the accessing the remote server") from api_err
 
-    def get_backend(self, name=None, **kwargs) -> Union[C12SimBackend, None]:
+    def get_backend(self, name=None, **kwargs) -> C12SimBackend | None:
         """
         Function to get a backend from a current provider.
 
@@ -77,8 +75,6 @@ class C12SimProvider(ProviderV1):
         if self._user_configs.verbose:
             print(f"Backend properties {properties}")
 
-        backend = C12SimBackend(
-            provider=self, name=name, request=self._request, properties=properties[0]
-        )
+        backend = C12SimBackend(provider=self, name=name, request=self._request, properties=properties[0])
 
         return backend
