@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/template_repo.iml" filepath="$PROJECT_DIR$/.idea/template_repo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/c12_callisto_clients.iml" filepath="$PROJECT_DIR$/.idea/c12_callisto_clients.iml" />
     </modules>
   </component>
 </project>
