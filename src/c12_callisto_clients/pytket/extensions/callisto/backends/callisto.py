@@ -165,7 +165,8 @@ class CallistoBackend(Backend):
         :param optimisation_level:
         :return:
         """
-        assert optimisation_level in range(3)
+        if optimisation_level not in range(3):
+            raise ValueError(f"Optimisation level must be in {list(range(3))}, got {optimisation_level}")
 
         seq = [DecomposeBoxes()]  # Decompose boxes into basic gates
         if optimisation_level == 1:
