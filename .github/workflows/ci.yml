@@ -1,10 +1,8 @@
-name: CI # You can rename it the way you want
+name: CI
 on:
   pull_request:
-    # Here you should put the list of all branches names you are susceptible to push to.
     branches: [ master, dev, main ]
 
-# Minimum required permissions
 permissions:
   contents: read
   checks: write
@@ -15,4 +13,4 @@ jobs:
     uses: c12qe/github_actions/.github/workflows/ci.yml@master
     secrets: inherit
     with:
-      run_audit: true # You can set it to false or remove it entirely to not run the optional job
+      run_audit: true
