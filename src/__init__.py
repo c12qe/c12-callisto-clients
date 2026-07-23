@@ -1,1 +1,1 @@
-from c12_callisto_clients import *
+from .c12_callisto_clients import *  # noqa: F403

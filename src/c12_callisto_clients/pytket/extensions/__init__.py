@@ -1,1 +1,3 @@
-from .callisto.backends.callisto import CallistoBackend
+from .callisto import CallistoBackend, CallistoRunningError
+
+__all__ = ["CallistoBackend", "CallistoRunningError"]

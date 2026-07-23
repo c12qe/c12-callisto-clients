@@ -1,43 +1,39 @@
-from c12_callisto_clients.api import *
-from c12_callisto_clients.user_configs import *
+import importlib.util
 
-try:
-    import qiskit
+from c12_callisto_clients.api import client, configs, exceptions
+from c12_callisto_clients.user_configs import UserConfigs
 
-    HAS_QISKIT = True
-    from c12_callisto_clients.qiskit import *
-except ImportError:
-    HAS_QISKIT = False
+qiskit_spec = importlib.util.find_spec("qiskit")
+if qiskit_spec is not None:
+    from c12_callisto_clients.qiskit import c12sim_backend, c12sim_job, c12sim_provider
 
-
-try:
-    import pytket
-
-    HAS_PYTKET = True
-    from c12_callisto_clients.pytket import *
-    from c12_callisto_clients.pytket.extensions import *
-    from c12_callisto_clients.pytket.extensions.callisto import *
-
-except ImportError:
-    HAS_PYTKET = False
+pytket_spec = importlib.util.find_spec("pytket")
+if pytket_spec is not None:
+    from c12_callisto_clients.pytket import CallistoBackend, CallistoRunningError
 
 
 def check_qiskit_installed():
     """Check if qiskit extra is installed."""
-    if not HAS_QISKIT:
-        raise ImportError(
-            "Qiskit support is not installed. "
-            "Install it with: pip install c12_callisto_clients[qiskit]"
-        )
+    if qiskit_spec is None:
+        raise ImportError("Qiskit support is not installed. Install it with: pip install c12_callisto_clients[qiskit]")
 
 
 def check_pytket_installed():
     """Check if pytket extra is installed."""
-    if not HAS_PYTKET:
-        raise ImportError(
-            "Pytket support is not installed. "
-            "Install it with: pip install c12_callisto_clients[pytket]"
-        )
+    if pytket_spec is None:
+        raise ImportError("Pytket support is not installed. Install it with: pip install c12_callisto_clients[pytket]")
 
 
-__all__ = ["HAS_QISKIT", "HAS_PYTKET", "check_qiskit_installed", "check_pytket_installed"]
+__all__ = [
+    "CallistoBackend",
+    "CallistoRunningError",
+    "UserConfigs",
+    "c12sim_backend",
+    "c12sim_job",
+    "c12sim_provider",
+    "check_pytket_installed",
+    "check_qiskit_installed",
+    "client",
+    "configs",
+    "exceptions",
+]

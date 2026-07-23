@@ -1,8 +1,9 @@
 import os
+
 from setuptools import setup
 
 try:
-    with open("README.md", "r") as fp:
+    with open("README.md") as fp:
         README = fp.read()
 except FileNotFoundError:
     README = ""

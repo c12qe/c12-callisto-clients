@@ -1,0 +1,14 @@
+name: Setup
+
+# Made to be used with secrets/vars values which defaults to '' if not found.
+runs:
+  using: composite
+  steps:
+    - uses: astral-sh/setup-uv@v7
+      with:
+        version: "latest"
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+
+    - run: uv sync --frozen --all-extras --all-groups
+      shell: bash

@@ -1,7 +1,7 @@
 import os
-import yaml
 import sys
 
+import yaml
 
 default_path = os.path.dirname(__file__)
 sys.path.insert(0, os.path.abspath(default_path + "../../src"))
@@ -16,7 +16,7 @@ current_version = os.environ.get("current_version")
 project = "CALLISTO"
 copyright = "2024, C12 Quantum Electronics"
 author = "C12 Quantum Electronics"
-release = f"{current_version if current_version != 'latest' else '2.1.0' }"
+release = f"{current_version if current_version != 'latest' else '2.1.0'}"
 
 
 extensions = ["sphinx.ext.autodoc", "myst_parser", "nbsphinx"]
@@ -29,7 +29,7 @@ html_theme = "furo"
 html_static_path = ["_static"]
 html_favicon = "_static/favicon.png"
 html_theme_options = {
-    f"announcement": f"We're pleased to announce that <bold>CALLISTO {current_version if current_version != 'latest' else '2.2.0' }</bold> is now released!",
+    "announcement": f"We're pleased to announce that <bold>CALLISTO {current_version if current_version != 'latest' else '2.2.0'}</bold> is now released!",
     "light_css_variables": {
         "color-brand-primary": "#3A3938",
         "color-brand-content": "#D6A018",
@@ -72,15 +72,13 @@ if current_language == "en":
 
 # and loop over all other versions from our yaml file
 # to set versions and languages
-with open("versions.yaml", "r") as yaml_file:
+with open("versions.yaml") as yaml_file:
     docs = yaml.safe_load(yaml_file)
 
 if docs is not None and docs.items() is not None:
     if current_version != "latest":
         for language in docs[current_version].get("languages", []):
-            html_context["languages"].append(
-                [language, pages_root + "/" + current_version + "/" + language]
-            )
+            html_context["languages"].append([language, pages_root + "/" + current_version + "/" + language])
 
     for version, details in docs.items():
         html_context["versions"].append([version, pages_root + version + "/" + current_language])
