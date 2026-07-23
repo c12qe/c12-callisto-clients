@@ -1,16 +1,95 @@
 name: CI
+
 on:
   pull_request:
-    branches: [ master, dev, main ]
-
-permissions:
-  contents: read
-  checks: write
-  pull-requests: write
+    branches: [ master ]
 
 jobs:
-  CI:
-    uses: c12qe/github_actions/.github/workflows/ci.yml@master
-    secrets: inherit
-    with:
-      run_audit: true
+  ruff:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: ./.github/actions/setup
+
+      - name: Run Ruff check
+        run: uv run ruff check .
+
+      - name: Run Ruff format
+        # Useful if linter failed, we still want to check formatter
+        if: ${{ !cancelled() }}
+        run: uv run --frozen ruff format . --check
+
+  pyright:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: ./.github/actions/setup
+
+      - name: Run pyright
+        run: uv run --frozen pyright
+
+  pytest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+
+    steps:
+      - uses: ./.github/actions/setup
+        id: setup
+
+      - name: Check if there are any tests
+        id: check
+        run: |
+          if [ -d tests ] && [ -n "$(find tests -name 'test_*.py')" ]; then
+            echo "has_tests=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run tests
+        if: ${{steps.check.outputs.has_tests == 'true'}}
+        run: uv run --frozen pytest tests --junitxml=results.xml
+
+      - name: Publish test results
+        if: ${{ !cancelled() && steps.check.outputs.has_tests == 'true'}}
+        uses: EnricoMi/publish-unit-test-result-action/linux@v2
+        with:
+          files: results.xml
+
+  audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: ./.github/actions/setup
+        id: setup
+
+      - name: Run audit
+        id: audit
+        run: uv audit --frozen > audit_output.txt
+
+      - name: Publish PR comment if failed
+        if: ${{!cancelled() && steps.audit.outcome != 'sucess'}}
+        uses: marocchino/sticky-pull-request-comment@v3
+        with:
+          header: audit
+          path: audit_output.txt
+          message: |
+            # UV Audit results
+            <details>
+            <summary>Show audit output</summary>
+            {{{content}}}
+            </details>
+
+      - name: Delete PR comment if successful
+        uses: marocchino/sticky-pull-request-comment@v3
+        with:
+          header: audit
+          delete: true
+
