@@ -11,6 +11,7 @@ jobs:
       contents: read
 
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
 
       - name: Run Ruff check
@@ -27,6 +28,7 @@ jobs:
       contents: read
 
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
 
       - name: Run pyright
@@ -40,6 +42,7 @@ jobs:
       pull-requests: write
 
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
         id: setup
 
@@ -67,6 +70,7 @@ jobs:
       pull-requests: write
 
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
         id: setup
 

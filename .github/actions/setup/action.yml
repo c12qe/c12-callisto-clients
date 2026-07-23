@@ -4,8 +4,6 @@ name: Setup
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v4
-
     - uses: astral-sh/setup-uv@v7
       with:
         version: "latest"
