@@ -1,18 +1,18 @@
-from typing import Iterable, List, Optional, Dict, Tuple, Union, NewType
+from collections.abc import Iterable
+from typing import NewType
+
 from numpy import pi
-from qiskit.circuit.equivalence_library import SessionEquivalenceLibrary
-from qiskit.quantum_info import TwoQubitBasisDecomposer
-from qiskit.providers import BackendV2, Provider, Options
-from qiskit.transpiler import Target, InstructionProperties
 from qiskit.circuit import Measure, Parameter, QuantumCircuit
-from qiskit.circuit.library import RXGate, RYGate, RZGate, iSwapGate, CRXGate, CXGate
+from qiskit.circuit.equivalence_library import SessionEquivalenceLibrary
+from qiskit.circuit.library import CRXGate, CXGate, RXGate, RYGate, RZGate, iSwapGate
+from qiskit.providers import BackendV2, Options, Provider
+from qiskit.quantum_info import TwoQubitBasisDecomposer
+from qiskit.transpiler import InstructionProperties, Target
 
 from c12_callisto_clients.api.client import Request
 from c12_callisto_clients.api.exceptions import ApiError
-from c12_callisto_clients.qiskit_back.exceptions import C12SimJobError
-
-
 from c12_callisto_clients.qiskit_back.c12sim_job import C12SimJob
+from c12_callisto_clients.qiskit_back.exceptions import C12SimJobError
 
 gate_name_to_instruction_mapper = {
     "rx": RXGate(Parameter("theta")),
@@ -25,7 +25,7 @@ gate_name_to_instruction_mapper = {
 
 InstOpsType = NewType(
     "InstOpsType",
-    Optional[Dict[Union[Tuple[int], Tuple[int, int]], Optional[InstructionProperties]]],
+    dict[tuple[int] | tuple[int, int], InstructionProperties | None] | None,
 )
 
 
@@ -43,8 +43,8 @@ class C12SimBackend(BackendV2):
         self,
         name: str,
         request: Request,
-        provider: Provider = None,
-        properties: dict = None,
+        provider: Provider | None = None,
+        properties: dict | None = None,
         **fields,
     ):
         """
@@ -120,7 +120,7 @@ class C12SimBackend(BackendV2):
 
         return target
 
-    def jobs(self, limit: int = 50, offset: int = 0) -> List[C12SimJob]:
+    def jobs(self, limit: int = 50, offset: int = 0) -> list[C12SimJob]:
         """
         Returns all the jobs associated to the user for the backend.
 
@@ -147,7 +147,7 @@ class C12SimBackend(BackendV2):
 
         return result
 
-    def get_job(self, job_uuid: str) -> Optional[C12SimJob]:
+    def get_job(self, job_uuid: str) -> C12SimJob | None:
         """
         Get the job with a given uuid.
 
@@ -177,12 +177,10 @@ class C12SimBackend(BackendV2):
 
     @property
     def dtm(self) -> float:
-        raise NotImplementedError(
-            f"System time resolution of output signals is not supported by {self._backend_name}."
-        )
+        raise NotImplementedError(f"System time resolution of output signals is not supported by {self._backend_name}.")
 
     @property
-    def meas_map(self) -> List[List[int]]:
+    def meas_map(self) -> list[list[int]]:
         raise NotImplementedError(f"Meas map is not supported by {self._backend_name}.")
 
     def drive_channel(self, qubit: int):
@@ -209,9 +207,7 @@ class C12SimBackend(BackendV2):
 
                 ini_circuit = tmp_qc.copy_empty_like()
                 ini_circuit.append(instruction, qargs, cargs)
-                ini_circuit = (
-                    ini_circuit.decompose()
-                )  # It has to be done for the OpenQASM 2.0 it will fail otherwise
+                ini_circuit = ini_circuit.decompose()  # It has to be done for the OpenQASM 2.0 it will fail otherwise
 
                 # Pass over the ini_circuit and append it
                 # The best way would be to append two circuits
@@ -224,7 +220,7 @@ class C12SimBackend(BackendV2):
 
         return tmp_qc.qasm(formatted=False)
 
-    def run(self, run_input, **options) -> Union[C12SimJob, List[C12SimJob]]:
+    def run(self, run_input, **options) -> C12SimJob | list[C12SimJob]:
         """
         This method returns a :class:`~qiskit.providers.Job` object that runs circuits.
 

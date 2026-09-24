@@ -1,16 +1,17 @@
-from typing import Optional, Union
-import time
 import json
+import time
+
 import numpy as np
 import requests
+
 from c12_callisto_clients.api.configs import (
-    API_MAXJOBS_URL,
     API_BACKENDS_URL,
-    API_QUERY_URL,
-    API_JOB_STATUS_URL,
-    API_USER_JOBS,
     API_GET_JOB,
+    API_JOB_STATUS_URL,
+    API_MAXJOBS_URL,
     API_PARAMS_URL,
+    API_QUERY_URL,
+    API_USER_JOBS,
 )
 from c12_callisto_clients.api.exceptions import ApiError
 
@@ -44,7 +45,7 @@ class Request:
         self._auth_token = auth_token
         self._auth_header = {"Authorization": "Bearer " + self._auth_token}
 
-    def do_request(self, url: str, method: str, params: dict = None, header: dict = None) -> object:
+    def do_request(self, url: str, method: str, params: dict | None = None, header: dict | None = None) -> object:
         """
         Generic function for performing the API request.
 
@@ -69,22 +70,16 @@ class Request:
             print(f"Calling API {method}:{url} with params {params}")
 
         if method == "post":
-            response = requests.request(
-                method=method, url=url, data=json.dumps(params), headers=headers, timeout=60
-            )
+            response = requests.request(method=method, url=url, data=json.dumps(params), headers=headers, timeout=60)
         else:
-            response = requests.request(
-                method=method, url=url, params=params, headers=headers, timeout=60
-            )
+            response = requests.request(method=method, url=url, params=params, headers=headers, timeout=60)
         status = response.status_code
 
         if self._verbose:
             print(f"Response {response.status_code}")
 
         if status == 401:
-            raise PermissionError(
-                "You do not have a proper credentials to access the requested endpoint."
-            )
+            raise PermissionError("You do not have a proper credentials to access the requested endpoint.")
 
         if status < 200 or status >= 300:
             raise ApiError(f"Error occurred during the execution of the request: {status}")
@@ -101,8 +96,8 @@ class Request:
     def get_job_result(
         self,
         job_uuid: str,
-        output_data: str = None,
-        timeout: Optional[float] = None,
+        output_data: str | None = None,
+        timeout: float | None = None,
         wait: float = 5,
     ) -> object:
         """
@@ -150,8 +145,8 @@ class Request:
         result: str,
         backend_name: str,
         ini_noise: bool = False,
-        ini: Union[str, list[np.complexfloating]] = None,
-        physical_params: str = None,
+        ini: str | list[np.complexfloating] | None = None,
+        physical_params: str | None = None,
     ) -> tuple:
         """
         Call the API to start the job.
@@ -177,9 +172,7 @@ class Request:
             if isinstance(ini, str):
                 params["inilabel"] = ini
             else:
-                params["inistatevector"] = np.array2string(
-                    np.array(ini), separator=",", suppress_small=True
-                )
+                params["inistatevector"] = np.array2string(np.array(ini), separator=",", suppress_small=True)
         if ini_noise:
             params["ininoise"] = True
 

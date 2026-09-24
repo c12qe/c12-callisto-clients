@@ -2,39 +2,36 @@
 
 # pylint: disable = no-name-in-module
 # pylint: disable = import-error
-from typing import Optional, List, Union, Sequence, Dict
+from collections.abc import Sequence
+
 import numpy as np
-
-
-from pytket import OpType, Circuit
+from pytket import Circuit, OpType
+from pytket.architecture import FullyConnected
+from pytket.backends import Backend, CircuitNotRunError, CircuitStatus, StatusEnum
+from pytket.backends.backendinfo import BackendInfo
+from pytket.backends.backendresult import BackendResult
+from pytket.backends.resulthandle import ResultHandle, _ResultIdTuple
 from pytket.passes import (
     BasePass,
     DecomposeBoxes,
-    SimplifyInitial,
-    SequencePass,
     FullPeepholeOptimise,
+    SequencePass,
+    SimplifyInitial,
     SynthesiseTket,
     auto_rebase_pass,
 )
 from pytket.predicates import (
-    Predicate,
     MaxNQubitsPredicate,
-    NoClassicalBitsPredicate,
-    NoMidMeasurePredicate,
     NoClassicalControlPredicate,
+    NoMidMeasurePredicate,
     NoSymbolsPredicate,
+    Predicate,
 )
-from pytket.utils import OutcomeArray
 from pytket.qasm import circuit_to_qasm_str
+from pytket.utils import OutcomeArray
 from pytket.utils.results import KwargTypes
-from pytket.architecture import FullyConnected
-from pytket.backends import Backend, CircuitStatus, StatusEnum, CircuitNotRunError
-from pytket.backends.backendresult import BackendResult
-from pytket.backends.backendinfo import BackendInfo
-from pytket.backends.resulthandle import _ResultIdTuple, ResultHandle
 
-from c12_callisto_clients.api.client import Request, ApiError
-
+from c12_callisto_clients.api.client import ApiError, Request
 
 # Mapping between our way of describing the basis gates and pytket's way
 gate_mapping = {
@@ -46,7 +43,7 @@ gate_mapping = {
 }
 
 
-class CallistoRunningException(Exception):
+class CallistoRunningError(Exception):
     """Callisto Exception"""
 
     pass
@@ -56,7 +53,7 @@ class CallistoBackend(Backend):
     """A pytket Backing wrapper class for the C12 emulator"""
 
     _access_token: str = None  # Token used to access the C12 API
-    _backend_info: Optional[BackendInfo] = None
+    _backend_info: BackendInfo | None = None
 
     _supports_state = True  # Callisto supports retrieval of the statevector
     _supports_density_matrix = True  # Callisto supports retrieval of density matrix
@@ -72,13 +69,9 @@ class CallistoBackend(Backend):
         try:
             backends = request.get_backends()
         except PermissionError as permission_error:
-            raise CallistoRunningException(
-                "You do not have a permission to access the resource!"
-            ) from permission_error
+            raise CallistoRunningError("You do not have a permission to access the resource!") from permission_error
         except ApiError as api_err:
-            raise CallistoRunningException(
-                "An error occured during the retrieval of the available backends"
-            ) from api_err
+            raise CallistoRunningError("An error occured during the retrieval of the available backends") from api_err
 
         return backends
 
@@ -90,7 +83,7 @@ class CallistoBackend(Backend):
         self._request = Request(self._access_token, verbose)
 
     @property
-    def backend_info(self) -> Optional[BackendInfo]:
+    def backend_info(self) -> BackendInfo | None:
         """
         Getter for obtaining the information about a backend. If the backend is not set, it calls
         private _get_info method to retrieve the information.
@@ -101,7 +94,7 @@ class CallistoBackend(Backend):
             self._backend_info = self._get_info(self._backend_name)
         return self._backend_info
 
-    def _get_info(self, backend_name: str) -> Optional[BackendInfo]:
+    def _get_info(self, backend_name: str) -> BackendInfo | None:
         """
         Get the BackendInfo instance for a given backend_name.
 
@@ -114,13 +107,9 @@ class CallistoBackend(Backend):
         try:
             backends = self._request.get_backends()
         except PermissionError as permission_error:
-            raise CallistoRunningException(
-                "You do not have a permission to access the resource!"
-            ) from permission_error
+            raise CallistoRunningError("You do not have a permission to access the resource!") from permission_error
         except ApiError as api_err:
-            raise CallistoRunningException(
-                "An error occured during the retrieval of the available backends"
-            ) from api_err
+            raise CallistoRunningError("An error occured during the retrieval of the available backends") from api_err
 
         for backend in backends:
             if backend_name in backend["backend_name"]:
@@ -139,7 +128,7 @@ class CallistoBackend(Backend):
         """
         name = data["backend_name"]
         n_qubits = data["n_qubits"]
-        gate_set: List[str] = data["basis_gates"]
+        gate_set: list[str] = data["basis_gates"]
 
         return BackendInfo(
             name=name,
@@ -150,7 +139,7 @@ class CallistoBackend(Backend):
         )
 
     @property
-    def required_predicates(self) -> List[Predicate]:
+    def required_predicates(self) -> list[Predicate]:
         """
         Predicates represent the requirements that the circuit needs to satisfy to be able
         to be run on one backend.
@@ -176,22 +165,19 @@ class CallistoBackend(Backend):
         :param optimisation_level:
         :return:
         """
-        assert optimisation_level in range(3)
+        if optimisation_level not in range(3):
+            raise ValueError(f"Optimisation level must be in {list(range(3))}, got {optimisation_level}")
 
         seq = [DecomposeBoxes()]  # Decompose boxes into basic gates
         if optimisation_level == 1:
-            seq.append(
-                SynthesiseTket()
-            )  # Optimises and converts all gates to CX, TK1 and Phase gates.
+            seq.append(SynthesiseTket())  # Optimises and converts all gates to CX, TK1 and Phase gates.
         elif optimisation_level == 2:
             seq.append(SynthesiseTket())
             seq.append(SimplifyInitial())  # Simplify the circuit using knowledge of qubit state.
         else:
             seq.append(SynthesiseTket())
             seq.append(SimplifyInitial())
-            seq.append(
-                FullPeepholeOptimise()
-            )  # Deep optimisation and performing a peephole optimisation
+            seq.append(FullPeepholeOptimise())  # Deep optimisation and performing a peephole optimisation
 
         return SequencePass(seq)
 
@@ -235,7 +221,7 @@ class CallistoBackend(Backend):
         if status == "CANCELLED":
             return StatusEnum.CANCELLED
 
-        raise CallistoRunningException(f"Status not found {status}")
+        raise CallistoRunningError(f"Status not found {status}")
 
     def circuit_status(self, handle: ResultHandle) -> CircuitStatus:
         """
@@ -270,10 +256,10 @@ class CallistoBackend(Backend):
     def process_circuits(
         self,
         circuits: Sequence[Circuit],
-        n_shots: Optional[Union[int, Sequence[int]]] = None,
+        n_shots: int | Sequence[int] | None = None,
         valid_check: bool = True,
         **kwargs: KwargTypes,
-    ) -> List[ResultHandle]:
+    ) -> list[ResultHandle]:
         """
         Method that is called to run the circuit on the backend. It accepts a list of the instances of the Circuit
         class and a corresponding list of shots.
@@ -301,7 +287,7 @@ class CallistoBackend(Backend):
         for circuit in circuits:
             try:
                 handles.append(self.process_circuit(circuit, n_shots_list[count]))
-            except CallistoRunningException as error:
+            except CallistoRunningError as error:
                 print(f"The circuit {circuit} wasn't run successfully. {error}")
             count = count + 1
 
@@ -310,7 +296,7 @@ class CallistoBackend(Backend):
     def process_circuit(
         self,
         circuit: Circuit,
-        n_shots: Optional[int] = None,
+        n_shots: int | None = None,
         valid_check: bool = True,
         **kwargs: KwargTypes,
     ) -> ResultHandle:
@@ -336,7 +322,7 @@ class CallistoBackend(Backend):
             )
 
         except ApiError as api_err:
-            raise CallistoRunningException("Error starting a job") from api_err
+            raise CallistoRunningError("Error starting a job") from api_err
 
         handle = ResultHandle(job_uuid)
         self._cache[handle] = dict()
@@ -368,7 +354,7 @@ class CallistoBackend(Backend):
         """
         data = data["results"]
         if "counts" not in data or "statevector" not in data:
-            raise CallistoRunningException("Result is in a wrong format")
+            raise CallistoRunningError("Result is in a wrong format")
 
         counts = data["counts"]
         statevector = self._convert_json_to_np_array(data["statevector"])
@@ -387,7 +373,7 @@ class CallistoBackend(Backend):
         density_matrix = self._convert_json_to_np_matrix(data["density_matrix"])
         return BackendResult(state=statevector, shots=outcome_array, density_matrix=density_matrix)
 
-    def get_error_message(self, handle: ResultHandle) -> Optional[str]:
+    def get_error_message(self, handle: ResultHandle) -> str | None:
         """
         Method to get an error message if the job has failed its execution.
 
@@ -414,9 +400,7 @@ class CallistoBackend(Backend):
             status = self.get_circuit_status(data["status"])
 
             if status == StatusEnum.ERROR:
-                raise CallistoRunningException(
-                    f"Error during the circuit execution {data['errors']}"
-                )
+                raise CallistoRunningError(f"Error during the circuit execution {data['errors']}")
 
             backend_result = self._convert_result(data)
             self._update_cache_result(handle, {"result": backend_result})
@@ -426,9 +410,9 @@ class CallistoBackend(Backend):
         self,
         jobid: str,
         result_type: str = "counts,statevector,density_matrix",
-        timeout: Optional[int] = None,
-        wait: Optional[int] = None,
-    ) -> Dict:
+        timeout: int | None = None,
+        wait: int | None = None,
+    ) -> dict:
         """Get the results from the server"""
         if self._request is None or self._backend_name is None:
             raise RuntimeError("Backend client is not set")

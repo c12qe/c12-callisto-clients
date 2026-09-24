@@ -1,15 +1,14 @@
-from argparse import ArgumentParser, RawTextHelpFormatter
 import codecs
+from argparse import ArgumentParser, RawTextHelpFormatter
+
 from qiskit import QuantumCircuit
 
-from c12_callisto_clients.user_configs import UserConfigs
 from c12_callisto_clients.qiskit.c12sim_provider import C12SimProvider
+from c12_callisto_clients.user_configs import UserConfigs
 
 
 def add_arguments():
-    arg_parser.add_argument(
-        "--config", help="Use config file to get all data", default=None, nargs="?", const=True
-    )
+    arg_parser.add_argument("--config", help="Use config file to get all data", default=None, nargs="?", const=True)
 
     arg_parser.add_argument(
         "--verbose",

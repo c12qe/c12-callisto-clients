@@ -1,5 +1,0 @@
-name: c12_callisto_clients
-channels:
-  - defaults
-dependencies:
-  - python=3.10

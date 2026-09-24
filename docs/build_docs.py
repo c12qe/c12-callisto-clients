@@ -1,6 +1,7 @@
 import os
-import yaml
 import subprocess
+
+import yaml
 
 
 def build_doc(version, language, tag):
@@ -25,10 +26,10 @@ build_doc("latest", "en", "master")
 move_dir("./_build/html/", "../pages/")
 
 
-with open("./versions.yaml", "r") as yaml_file:
+with open("./versions.yaml") as yaml_file:
     docs = yaml.safe_load(yaml_file)
 
-if docs is not None and  docs.items() is not None:
+if docs is not None and docs.items() is not None:
     for version, details in docs.items():
         tag = details.get("tag", "")
         for language in details.get("languages", []):
