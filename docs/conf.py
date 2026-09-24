@@ -44,8 +44,8 @@ html_theme_options = {
         "font-stack": "Formular, Cardone Micro Trial, Inconsolata, monospace",
         "font-stack--monospace": "Fira Code, Courier, monospace",
     },
-    "light_logo": "logo_black.svg",
-    "dark_logo": "logo_white.svg",
+    "light_logo": "logo_black.png",
+    "dark_logo": "logo_white.png",
 }
 
 html_css_files = [
